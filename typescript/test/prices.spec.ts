@@ -17,16 +17,16 @@ describe('prices', () => {
     let app, connection
     beforeEach(async function () {
         ({app, connection}  = await createApp())
+        let url = toUrl('/prices', {type: '1jour', cost: 35})
+        await request(app)
+            .put(url)
+            .expect(200)
     });
     afterEach(async function () {
         await connection.close();
     });
 
     it('the 1 day full price pass is the standard', async () => {
-        let url = toUrl('/prices', {type: '1jour', cost: 35})
-        await request(app)
-            .put(url)
-            .expect(200)
 
         await request(app)
             .get(toUrl('/prices', {type: '1jour'}))
@@ -34,7 +34,19 @@ describe('prices', () => {
                 expect(res.body).lengthOf(1)
                 expect(res.body[0]).property('cost', 35)
             })
+    });
+
+    it('the 1 day children price pass is 30% off, rounded up', async () => {
+        await request(app)
+            .get(toUrl('/prices', {type: '1jour', age: 14}))
+            .expect( res => {
+                expect(res.body).lengthOf(1)
+                expect(res.body[0]).property('cost', 25)
+            })
 
     });
+
+
+
 
 });

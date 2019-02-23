@@ -19,9 +19,14 @@ async function createApp() {
     })
     app.get('/prices', async (req, res) => {
         const liftPassType = req.query.type
+        const age = req.query.age
         const [result] = await connection.query('SELECT cost FROM `liftpass` ' +
             'WHERE `type` = ? ', [liftPassType])
-        res.send(result)
+        if (age < 15) {
+            res.send([{cost: Math.ceil(result[0].cost * .7)}])
+        } else {
+            res.send(result)
+        }
     })
     return {app, connection}
 }
