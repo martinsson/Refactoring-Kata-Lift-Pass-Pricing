@@ -31,7 +31,8 @@ describe('prices', () => {
         await request(app)
             .get(toUrl('/prices', {type: '1jour'}))
             .expect((res) => {
-                expect(res.body.price).to.equal(35)
+                expect(res.body).lengthOf(1)
+                expect(res.body[0]).property('cost', 35)
             })
 
     });

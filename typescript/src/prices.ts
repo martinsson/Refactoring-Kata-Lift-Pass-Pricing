@@ -10,9 +10,6 @@ async function createApp() {
     app.put('/prices', async (req, res) => {
         const liftPassCost = req.query.cost//?
         const liftPassType = req.query.type
-// get the client
-        // create the connection
-        // query database
         const [rows, fields] = await connection.execute(
             'INSERT INTO `liftpass` (type, cost) VALUES (?, ?) ' +
             'ON DUPLICATE KEY UPDATE cost = ?',
@@ -21,8 +18,10 @@ async function createApp() {
         res.send()
     })
     app.get('/prices', async (req, res) => {
-        await connection.query('SELECT cost FROM `liftpass` ')
-        res.send({price: 35})
+        const liftPassType = req.query.type
+        const [result] = await connection.query('SELECT cost FROM `liftpass` ' +
+            'WHERE `type` = ? ', [liftPassType])
+        res.send(result)
     })
     return {app, connection}
 }
