@@ -31,8 +31,7 @@ describe('prices', () => {
         await request(app)
             .get(toUrl('/prices', {type: '1jour'}))
             .expect((res) => {
-                expect(res.body).lengthOf(1)
-                expect(res.body[0]).property('cost', 35)
+                expect(res.body).property('cost', 35)
             })
     });
 
@@ -40,8 +39,7 @@ describe('prices', () => {
         await request(app)
             .get(toUrl('/prices', {type: '1jour', age: 14}))
             .expect( res => {
-                expect(res.body).lengthOf(1)
-                expect(res.body[0]).property('cost', 25)
+                expect(res.body).property('cost', 25)
             })
 
     });
