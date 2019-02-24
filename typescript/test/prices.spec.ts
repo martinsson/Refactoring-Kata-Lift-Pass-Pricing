@@ -41,7 +41,6 @@ describe('prices', () => {
         });
     });
 
-
     [
         [25, 19],
         [14, 19],
@@ -59,6 +58,23 @@ describe('prices', () => {
     });
 
 
+    // monday x percent off
+    // TODO fix 24 => 25
+    [
+        {age: 25, date: '2019-02-24', expectedCost: 35}, // holidays, no deal
+        {age: 25, date: '2019-03-24', expectedCost: 26}, // 35% off
+        {age: 25, date: '2019-03-28', expectedCost: 35}, // not a monday
+    ].forEach(({age, date, expectedCost}) => {
+        it('', async () => {
+            let params = {type: '1jour', age, date}
+            await obtainPrices(params)
+                .expect( res => {
+                    expect(res.body).property('cost', expectedCost)
+                })
+        });
+
+
+    })
     // todo 2-4, and 5, 6 day pass
 
     function obtainPrices(params) {

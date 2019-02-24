@@ -29,7 +29,15 @@ Set up a database. For instance by executing this in a terminal:
          cost INT NOT NULL,
          PRIMARY KEY (pass_id),
          UNIQUE KEY (type)
-         );
+     );
+     CREATE TABLE IF NOT EXISTS test.holidays (
+        holiday DATE NOT NULL,
+        description VARCHAR(255) NOT NULL,
+        PRIMARY KEY (holiday)
+     );
+     INSERT INTO test.holidays VALUES ('2019-02-18T00:00:00.000Z', 'winter');
+     INSERT INTO test.holidays VALUES ('2019-02-25T00:00:00.000Z', 'winter');
+     INSERT INTO test.holidays VALUES ('2019-03-04T00:00:00.000Z', 'winter');
          
 Then head on to the language of your choice and follow the Readme in there.
          
