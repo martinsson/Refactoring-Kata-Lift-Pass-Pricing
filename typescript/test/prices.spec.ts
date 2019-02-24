@@ -30,7 +30,7 @@ describe('prices', () => {
         [14, 25],
         [5, 0],
         [65, 27],
-        [75, 15]
+        [75, 14]
     ].forEach(([age, expectedCost]) => {
         it('the 1 day children price pass is 30% off, rounded up', async () => {
             let params = {type: '1jour', age}

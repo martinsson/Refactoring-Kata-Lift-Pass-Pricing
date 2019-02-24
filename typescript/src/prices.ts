@@ -24,35 +24,39 @@ async function createApp() {
             'SELECT cost FROM `liftpass` ' +
             'WHERE `type` = ? ',
             [liftPassType])
-        if (liftPassType === 'night') {
-            if (age < 6) {
-                res.send({cost: 0})
-            } else if (age > 74) {
-                res.send({cost: Math.ceil(result.cost * .42)})
-            } else {
-                res.send(result)
-            }
-            return
-        }
+
         if (age < 6) {
             res.send({cost: 0})
         } else {
-            if (age < 15) {
-                res.send({cost: Math.ceil(result.cost * .7)})
-            } else {
-                if (age > 74) {
-                    res.send({cost: Math.ceil(result.cost * .42)})
+            if (liftPassType !== 'night') {
+                if (age < 15) {
+                    res.send({cost: Math.ceil(result.cost * .7)})
                 } else {
-                    if (age === undefined) {
-                        res.send(result)
+                    if (age > 74) {
+                        res.send({cost: Math.ceil(result.cost * .4)})
                     } else {
-                        if (age > 64) {
-                            res.send({cost: Math.ceil(result.cost * .75)})
-                        } else {
+                        if (age === undefined) {
                             res.send(result)
+                        } else {
+                            if (age > 64) {
+                                res.send({cost: Math.ceil(result.cost * .75)})
+                            } else {
+                                res.send(result)
+                            }
                         }
                     }
                 }
+            } else {
+                if (age >= 6) {
+                    if (age > 74) {
+                        res.send({cost: Math.ceil(result.cost / 2.5)})
+                    } else {
+                        res.send(result)
+                    }
+                } else {
+                    res.send({cost: 0})
+                }
+                return
             }
         }
     })
