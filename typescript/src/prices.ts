@@ -36,14 +36,24 @@ async function createApp() {
         }
         if (age < 6) {
             res.send({cost: 0})
-        } else if (age < 15) {
-            res.send({cost: Math.ceil(result.cost * .7)})
-        } else if (age > 74) {
-            res.send({cost: Math.ceil(result.cost * .42)})
-        } else if (age > 64) {
-            res.send({cost: Math.ceil(result.cost * .75)})
         } else {
-            res.send(result)
+            if (age < 15) {
+                res.send({cost: Math.ceil(result.cost * .7)})
+            } else {
+                if (age > 74) {
+                    res.send({cost: Math.ceil(result.cost * .42)})
+                } else {
+                    if (age === undefined) {
+                        res.send(result)
+                    } else {
+                        if (age > 64) {
+                            res.send({cost: Math.ceil(result.cost * .75)})
+                        } else {
+                            res.send(result)
+                        }
+                    }
+                }
+            }
         }
     })
     return {app, connection}
