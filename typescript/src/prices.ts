@@ -26,21 +26,26 @@ async function createApp() {
             [liftPassType])
 
         let reduction;
+        let isHoliday;
         if (age < 6) {
             res.send({cost: 0})
         } else {
             reduction = 0;
             if (liftPassType !== 'night') {
-                const [isHoliday] = await connection.query(
+                const [holidays] = await connection.query(
                     'SELECT * FROM `holidays'
                 )
-                let row = isHoliday[1]
+                for (let row of holidays) {
+                    const holidayDate = row.holiday.toISOString().split('T')[0]
+                    if (req.query.date && req.query.date === holidayDate ) {
+                        isHoliday = true
+                    }
 
-                // TODO loop here
-                const holidayDate = row.holiday.toISOString().split('T')[0]
-                if (req.query.date && req.query.date !== holidayDate && new Date(req.query.date).getDay() === 0 ) {
+                }
+                if (!isHoliday && new Date(req.query.date).getDay() === 0) {
                     reduction = 35
                 }
+
                 // TODO apply reduction for others
                 if (age < 15) {
                     res.send({cost: Math.ceil(result.cost * .7)})
