@@ -18,20 +18,18 @@ async function createApp() {
         res.send()
     })
     app.get('/prices', async (req, res) => {
-        const liftPassType = req.query.type
-        const age = req.query.age
         const [[result]] = await connection.query(
             'SELECT cost FROM `liftpass` ' +
             'WHERE `type` = ? ',
-            [liftPassType])
+            [req.query.type])
 
         let reduction;
         let isHoliday;
-        if (age < 6) {
+        if (req.query.age < 6) {
             res.send({cost: 0})
         } else {
             reduction = 0;
-            if (liftPassType !== 'night') {
+            if (req.query.type !== 'night') {
                 const [holidays] = await connection.query(
                     'SELECT * FROM `holidays'
                 )
@@ -47,16 +45,16 @@ async function createApp() {
                 }
 
                 // TODO apply reduction for others
-                if (age < 15) {
+                if (req.query.age < 15) {
                     res.send({cost: Math.ceil(result.cost * .7)})
                 } else {
-                    if (age > 74) {
+                    if (req.query.age > 74) {
                         res.send({cost: Math.ceil(result.cost * .4)})
                     } else {
-                        if (age === undefined) {
+                        if (req.query.age === undefined) {
                             res.send(result)
                         } else {
-                            if (age > 64) {
+                            if (req.query.age > 64) {
                                 res.send({cost: Math.ceil(result.cost * .75)})
                             } else {
                                 res.send({cost: Math.ceil(result.cost / (1 + reduction /100))})
@@ -65,8 +63,8 @@ async function createApp() {
                     }
                 }
             } else {
-                if (age >= 6) {
-                    if (age > 74) {
+                if (req.query.age >= 6) {
+                    if (req.query.age > 74) {
                         res.send({cost: Math.ceil(result.cost / 2.5)})
                     } else {
                         res.send(result)
