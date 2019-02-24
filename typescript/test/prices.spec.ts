@@ -2,17 +2,6 @@ import {expect} from "chai";
 import {createApp} from "../src/prices"
 import request from 'supertest'
 
-function toParamsString(params: object) {
-    return Object.entries(params)
-        .map(([k, v]) => k + "=" + v)
-        .join('&');
-}
-
-function toUrl(path: string, params: object) {
-    let urlParams = toParamsString(params)
-    return path + '?' + urlParams
-}
-
 describe('prices', () => {
     let app, connection
     beforeEach(async function () {
@@ -25,26 +14,46 @@ describe('prices', () => {
     afterEach(async function () {
         await connection.close();
     });
-
+    
     it('the 1 day full price pass is the standard', async () => {
 
-        await request(app)
-            .get(toUrl('/prices', {type: '1jour'}))
+        await obtainPrices({type: '1jour'})
             .expect((res) => {
                 expect(res.body).property('cost', 35)
             })
     });
 
-    it('the 1 day children price pass is 30% off, rounded up', async () => {
-        await request(app)
-            .get(toUrl('/prices', {type: '1jour', age: 14}))
-            .expect( res => {
-                expect(res.body).property('cost', 25)
-            })
+    [
+        [14, 25],
+        [5, 0],
+        [65, 27],
+        [75, 15]
+    ].forEach(([age, cost]) => {
+        it('the 1 day children price pass is 30% off, rounded up', async () => {
+            let params = {type: '1jour', age}
+            await obtainPrices(params)
+                .expect( res => {
+                    expect(res.body).property('cost', cost)
+                })
+        });
+    })
 
-    });
-
-
-
+    function obtainPrices(params) {
+        return request(app)
+            .get(toUrl('/prices', params))
+    }
 
 });
+
+
+function toParamsString(params: object) {
+    return Object.entries(params)
+        .map(([k, v]) => k + "=" + v)
+        .join('&');
+}
+
+function toUrl(path: string, params: object) {
+    let urlParams = toParamsString(params)
+    return path + '?' + urlParams
+}
+

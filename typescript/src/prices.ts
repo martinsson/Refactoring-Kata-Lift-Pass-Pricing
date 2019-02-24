@@ -13,17 +13,26 @@ async function createApp() {
         const [rows, fields] = await connection.execute(
             'INSERT INTO `liftpass` (type, cost) VALUES (?, ?) ' +
             'ON DUPLICATE KEY UPDATE cost = ?',
-            [liftPassType, liftPassCost, liftPassCost], ()=> {});
+            [liftPassType, liftPassCost, liftPassCost]);
 
         res.send()
     })
     app.get('/prices', async (req, res) => {
         const liftPassType = req.query.type
         const age = req.query.age
-        const [[result]] = await connection.query('SELECT cost FROM `liftpass` ' +
-            'WHERE `type` = ? ', [liftPassType])
-        if (age < 15) {
+        const [[result]] = await connection.query(
+            'SELECT cost FROM `liftpass` ' +
+            'WHERE `type` = ? ',
+            [liftPassType])
+        if (age < 6) {
+            res.send({cost: 0})
+        }
+        else if (age < 15) {
             res.send({cost: Math.ceil(result.cost * .7)})
+        } else if (age > 74) {
+            res.send({cost: Math.ceil(result.cost * .42)})
+        } else if (age > 64) {
+            res.send({cost: Math.ceil(result.cost * .75)})
         } else {
             res.send(result)
         }
