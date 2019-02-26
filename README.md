@@ -1,22 +1,26 @@
 
 # Lift pass pricing
 
-This is a refactoring kata, where you could learn how to take on some 
-non unit-testable code that integrates with a database and with some rest-based 
-framework. This code cannot be unit tested, therefor it models a 
-common problem - code that isn't designed to be tested. You'll have
-tu put in place some black-box tests integrating with the database and possibly 
-accessing the http api. Once the code is covered you can refactor it in order
-to make some kind of architecture appear (layered, hexagonal, onion, ...). 
-Finally once the logic is not exclusively in the controller, you might be able
-to unit test it. 
+This application solves the problem of calculating the pricing for ski lift passes.
+There's some intricate logic linked to what kind of lift pass you want, your age
+and the specific date at which you'd like to ski. There's a new feature request, 
+be able to get the price for several lift passes, not just one. Currently the pricing 
+for a single lift pass is implemented, unfortunately the code as it is designed 
+is ***not reusable***.
+You could put some high level tests in place in order to do ***preparatory refactoring*** 
+so that the new feature requires minimum effort to implement. 
 
-# When am I done?
-Once the testing pyramid is respected, i.e. tests should be stable and fast. 
-There should be a lot more unit tests than tests on the rest api and tests 
-integrating with the database.
+This kata models a common problem - code that that it makes no sense to unit test due to 
+bad design. 
 
-# Installation  
+## When am I done?
+There are a few steps, you could do any of them.
+1. Cover with high level tests.
+1. Refactor the code to maximize unit testability and reuse for the new feature
+1. Pull down most of the high level tests
+1. Implement the new feature using unit tests and 1 or 2 high level tests.
+ 
+## Installation  
 Set up a database. For instance by executing this in a terminal:
 
      docker run -p 3306:3306 --name mariadb -e  MYSQL_ROOT_PASSWORD=mysql -d mariadb:10.4 
@@ -41,3 +45,25 @@ Set up a database. For instance by executing this in a terminal:
          
 Then head on to the language of your choice and follow the Readme in there.
          
+## Tips
+
+There's a good chance you could find a design that is both easier to test, faster to
+work with and that solves the problem with minimum amount of code. One such design 
+would be to rid the bulk of the logic from it's adherence to the http/rest framework
+ and from the sql specificities. This is sometimes called **hexagonal architecture** 
+ and it facilitates respecting the ***Testing Pyramid*** which is not currently 
+ possible - there can be only top-level tests
+ 
+The typical workflow would be 
+
+1. Cover everything from the http layer, use a real DB
+1. Separate request data extraction and sending the response from the logic
+1. Extract a method with the pure logic, move that method to an object (ex PricingLogic)
+1. Now extract the sql stuff from PricingLogic, first to some method with a signature that
+has nothing to do with sql, then move these methods to a new class (ex PricingDao)
+1. There should be ~3/4 elements, the http layer should have the PricingLogic as 
+an injected dependency and the PricingLogic should have the PricingDao as an injected
+dependency. 
+1. Move the bulk of the high level tests down onto PricingLogic using a fake dao, write some 
+focused integration tests for the PricingDao using a real DB, there should be only a handful.
+Now the http layer and the integration of the parts can be tested with very few (one or two) high-level tests. 
