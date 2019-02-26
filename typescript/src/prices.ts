@@ -18,10 +18,10 @@ async function createApp() {
         res.send()
     })
     app.get('/prices', async (req, res) => {
-        const [[result]] = await connection.query(
+        const result = (await connection.query(
             'SELECT cost FROM `liftpass` ' +
             'WHERE `type` = ? ',
-            [req.query.type])
+            [req.query.type]))[0][0]
 
         let reduction;
         let isHoliday;
@@ -30,9 +30,9 @@ async function createApp() {
         } else {
             reduction = 0;
             if (req.query.type !== 'night') {
-                const [holidays] = await connection.query(
-                    'SELECT * FROM `holidays'
-                )
+                const holidays = (await connection.query(
+                    'SELECT * FROM `holidays`'
+                ))[0]
                 for (let row of holidays) {
                     const holidayDate = row.holiday.toISOString().split('T')[0]
                     if (req.query.date && req.query.date === holidayDate ) {
