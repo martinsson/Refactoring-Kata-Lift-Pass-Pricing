@@ -43,6 +43,10 @@ Set up a database. For instance by executing this in a terminal:
      INSERT INTO test.holidays VALUES ('2019-02-25T00:00:00.000Z', 'winter');
      INSERT INTO test.holidays VALUES ('2019-03-04T00:00:00.000Z', 'winter');
          
+You can also use the scripts that will start the docker container and initialize the database for you, by running:
+
+    ./runLocalDatabase.sh
+
 Then head on to the language of your choice and follow the Readme in there.
          
 ## Tips
