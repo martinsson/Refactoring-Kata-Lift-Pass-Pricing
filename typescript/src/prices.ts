@@ -4,14 +4,14 @@ import mysql from "mysql2/promise"
 async function createApp() {
     const app = express()
 
-    let connectionOptions = {host: 'localhost', user: 'root', database: 'test', password: 'mysql'}
+    let connectionOptions = {host: 'localhost', user: 'root', database: 'lift_pass', password: 'mysql'}
     const connection = await mysql.createConnection(connectionOptions);
 
     app.put('/prices', async (req, res) => {
         const liftPassCost = req.query.cost
         const liftPassType = req.query.type
         const [rows, fields] = await connection.execute(
-            'INSERT INTO `liftpass` (type, cost) VALUES (?, ?) ' +
+            'INSERT INTO `base_price` (type, cost) VALUES (?, ?) ' +
             'ON DUPLICATE KEY UPDATE cost = ?',
             [liftPassType, liftPassCost, liftPassCost]);
 
@@ -19,7 +19,7 @@ async function createApp() {
     })
     app.get('/prices', async (req, res) => {
         const result = (await connection.query(
-            'SELECT cost FROM `liftpass` ' +
+            'SELECT cost FROM `base_price` ' +
             'WHERE `type` = ? ',
             [req.query.type]))[0][0]
 
@@ -30,9 +30,9 @@ async function createApp() {
         } else {
             reduction = 0;
             if (req.query.type !== 'night') {
-                const holidays = (await connection.query(
+                const [holidays] = await connection.query(
                     'SELECT * FROM `holidays`'
-                ))[0]
+                )
                 for (let row of holidays) {
                     const holidayDate = row.holiday.toISOString().split('T')[0]
                     if (req.query.date && req.query.date === holidayDate ) {
