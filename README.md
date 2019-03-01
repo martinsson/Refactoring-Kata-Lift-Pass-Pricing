@@ -13,6 +13,8 @@ so that the new feature requires minimum effort to implement.
 This kata models a common problem - code that that it makes no sense to unit test due to 
 bad design. 
 
+You can find a [video pitch here](http://youtube.com/watch?v=-gSyD60WAvc)
+
 ## When am I done?
 There are a few steps, you could do any of them.
 1. Cover with high level tests.
@@ -21,31 +23,14 @@ There are a few steps, you could do any of them.
 1. Implement the new feature using unit tests and 1 or 2 high level tests.
  
 ## Installation  
-Set up a database. For instance by executing this in a terminal:
-
-     docker run -p 3306:3306 --name mariadb -e  MYSQL_ROOT_PASSWORD=mysql -d mariadb:10.4 
-     docker exec -it mariadb mysql -p 
-     create database `test`;
-     create table `test.liftpass`;
-     CREATE TABLE IF NOT EXISTS test.liftpass (
-         pass_id INT AUTO_INCREMENT,
-         type VARCHAR(255) NOT NULL,
-         cost INT NOT NULL,
-         PRIMARY KEY (pass_id),
-         UNIQUE KEY (type)
-     );
-     CREATE TABLE IF NOT EXISTS test.holidays (
-        holiday DATE NOT NULL,
-        description VARCHAR(255) NOT NULL,
-        PRIMARY KEY (holiday)
-     );
-     INSERT INTO test.holidays VALUES ('2019-02-18T00:00:00.000Z', 'winter');
-     INSERT INTO test.holidays VALUES ('2019-02-25T00:00:00.000Z', 'winter');
-     INSERT INTO test.holidays VALUES ('2019-03-04T00:00:00.000Z', 'winter');
-         
-You can also use the scripts that will start the docker container and initialize the database for you, by running:
+Set up a database a mysql database on localhost 3306. If you have docker installed the easiest thing is to use this script, 
+that will initialize a mariadb, and the data that goes with it.
 
     ./runLocalDatabase.sh
+    
+If not you can just inject the data in 
+
+    database/*.sql
 
 Then head on to the language of your choice and follow the Readme in there.
          
