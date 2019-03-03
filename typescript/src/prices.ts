@@ -35,13 +35,13 @@ async function createApp() {
                 )
                 for (let row of holidays) {
                     const holidayDate = row.holiday.toISOString().split('T')[0]
-                    if (req.query.date && req.query.date === holidayDate ) {
+                    if (req.query.date && req.query.date === holidayDate) {
                         isHoliday = true
                     }
 
                 }
                 if (!isHoliday && new Date(req.query.date).getDay() === 0) {
-                    reduction = 35
+                    reduction = 60
                 }
 
                 // TODO apply reduction for others
@@ -55,9 +55,9 @@ async function createApp() {
                             res.send(result)
                         } else {
                             if (req.query.age > 64) {
-                                res.send({cost: Math.ceil(result.cost * .75)})
+                                res.send({cost: Math.ceil(result.cost * .75 / (1 + reduction / 100))})
                             } else {
-                                res.send({cost: Math.ceil(result.cost / (1 + reduction /100))})
+                                res.send({cost: Math.ceil(result.cost / (1 + reduction / 100))})
                             }
                         }
                     }

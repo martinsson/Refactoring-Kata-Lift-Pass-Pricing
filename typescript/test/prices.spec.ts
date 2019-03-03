@@ -59,14 +59,12 @@ describe('prices', () => {
 
 
     // monday x percent off
-    // TODO fix 24 => 25
+    // TODO fix 24th => 25th
     [
         {age: 25, date: '2019-02-24', expectedCost: 35}, // holidays, no deal
         {age: 25, date: '2019-03-28', expectedCost: 35}, // not a monday
-        {age: 25, date: '2019-03-24', expectedCost: 26}, // 35% off
-        // {age: 24, date: '2019-03-24', expectedCost: 17}, // 35% off
-        // {age: 25, date: '2019-03-24', expectedCost: 26}, // 35% off
-        // {age: 25, date: '2019-03-24', expectedCost: 26}, // 35% off
+        {age: 25, date: '2019-03-24', expectedCost: 22}, // ~40% off
+        {age: 65, date: '2019-03-24', expectedCost: 17}, // ~40% off
     ].forEach(({age, date, expectedCost}) => {
         it('', async () => {
             let params = {type: '1jour', age, date}
