@@ -30,9 +30,10 @@ async function createApp() {
         } else {
             reduction = 0;
             if (req.query.type !== 'night') {
-                const [holidays] = await connection.query(
+                const holidays = (await connection.query(
                     'SELECT * FROM `holidays`'
-                )
+                ))[0]
+
                 for (let row of holidays) {
                     const holidayDate = row.holiday.toISOString().split('T')[0]
                     if (req.query.date && req.query.date === holidayDate) {
@@ -52,7 +53,11 @@ async function createApp() {
                         res.send({cost: Math.ceil(result.cost * .4)})
                     } else {
                         if (req.query.age === undefined) {
-                            res.send(result)
+                            let cost = result.cost
+                            if (reduction) {
+                                cost = cost / (1 + reduction / 100)
+                            }
+                            res.send({cost: Math.ceil(cost)})
                         } else {
                             if (req.query.age > 64) {
                                 let cost = result.cost * .75
@@ -80,7 +85,6 @@ async function createApp() {
                 } else {
                     res.send({cost: 0})
                 }
-                return
             }
         }
     })
