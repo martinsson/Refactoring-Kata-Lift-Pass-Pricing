@@ -42,7 +42,7 @@ async function createApp() {
 
                 }
                 if (!isHoliday && new Date(req.query.date).getDay() === 0) {
-                    reduction = 60
+                    reduction = 35
                 }
 
                 // TODO apply reduction for others
@@ -52,20 +52,20 @@ async function createApp() {
                     if (req.query.age === undefined) {
                         let cost = result.cost
                         if (reduction) {
-                            cost = cost / (1 + reduction / 100)
+                            cost = cost * (1 - reduction / 100)
                         }
                         res.send({cost: Math.ceil(cost)})
                     } else {
                         if (req.query.age > 64) {
                             let cost = result.cost * .75
                             if (reduction) {
-                                cost = cost / (1 + reduction / 100)
+                                cost = cost * (1 - reduction / 100)
                             }
                             res.send({cost: Math.ceil(cost)})
                         } else {
                             let cost = result.cost
                             if (reduction) {
-                                cost = cost / (1 + reduction / 100)
+                                cost = cost * (1 - reduction / 100)
                             }
                             res.send({cost: Math.ceil(cost)})
                         }
