@@ -57,6 +57,7 @@ describe('prices', () => {
         {age: 15, expectedCost: 35, date: '2019-02-22'},
         {age: 15, expectedCost: 35, date: '2019-02-24'},
         {age: 15, expectedCost: 22, date: '2019-03-10'},
+        {age: 65, expectedCost: 17, date: '2019-03-10'},
     ]
         .forEach(({age, expectedCost, date}) => {
             it('works for monday deals', async () => {
