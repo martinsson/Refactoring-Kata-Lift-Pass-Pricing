@@ -26,7 +26,6 @@ describe('prices', () => {
         {age: 14, expectedCost: 25},
         {age: 5, expectedCost: 0},
         {age: 65, expectedCost: 27},
-        {age: 75, expectedCost: 14},
     ]
         .forEach(({age, expectedCost}) => {
             it('works for all ages', async () => {
@@ -40,7 +39,7 @@ describe('prices', () => {
 
     [
         {age: 25, expectedCost: 19},
-        {age: 75, expectedCost: 8},
+        {age: 65, expectedCost: 8},
         {age: 5, expectedCost: 0},
     ]
         .forEach(({age, expectedCost}) => {

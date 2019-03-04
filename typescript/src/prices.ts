@@ -49,35 +49,31 @@ async function createApp() {
                 if (req.query.age < 15) {
                     res.send({cost: Math.ceil(result.cost * .7)})
                 } else {
-                    if (req.query.age > 74) {
-                        res.send({cost: Math.ceil(result.cost * .4)})
+                    if (req.query.age === undefined) {
+                        let cost = result.cost
+                        if (reduction) {
+                            cost = cost / (1 + reduction / 100)
+                        }
+                        res.send({cost: Math.ceil(cost)})
                     } else {
-                        if (req.query.age === undefined) {
-                            let cost = result.cost
+                        if (req.query.age > 64) {
+                            let cost = result.cost * .75
                             if (reduction) {
                                 cost = cost / (1 + reduction / 100)
                             }
                             res.send({cost: Math.ceil(cost)})
                         } else {
-                            if (req.query.age > 64) {
-                                let cost = result.cost * .75
-                                if (reduction) {
-                                    cost = cost / (1 + reduction / 100)
-                                }
-                                res.send({cost: Math.ceil(cost)})
-                            } else {
-                                let cost = result.cost
-                                if (reduction) {
-                                    cost = cost / (1 + reduction / 100)
-                                }
-                                res.send({cost: Math.ceil(cost)})
+                            let cost = result.cost
+                            if (reduction) {
+                                cost = cost / (1 + reduction / 100)
                             }
+                            res.send({cost: Math.ceil(cost)})
                         }
                     }
                 }
             } else {
                 if (req.query.age >= 6) {
-                    if (req.query.age > 74) {
+                    if (req.query.age > 64) {
                         res.send({cost: Math.ceil(result.cost / 2.5)})
                     } else {
                         res.send(result)
