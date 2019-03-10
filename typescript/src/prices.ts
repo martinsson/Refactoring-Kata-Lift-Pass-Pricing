@@ -26,8 +26,8 @@ async function createApp() {
         let age = req.query.age
         let skiingDate = req.query.date
 
-        let response = await priceLogic.calculateCostFor(liftPassType, age, skiingDate)
-        res.send(response)
+        let cost = await priceLogic.calculateCostFor(liftPassType, skiingDate, age)
+        res.send(cost)
     })
     return {app, connection}
 }

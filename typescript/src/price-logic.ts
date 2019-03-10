@@ -1,22 +1,5 @@
 import {PriceDao} from "./price-dao"
-
-class Cost {
-    constructor(private rawCost: { cost: number }) {
-
-    }
-
-    public reduceByPercentage(percentOff: number) {
-        return new Cost({cost: Math.ceil(this.rawCost.cost * (1- percentOff/100))})
-    }
-
-    getRaw() {
-        return this.rawCost
-    }
-
-    static free() {
-        return {cost: 0}
-    }
-}
+import {Cost} from "./cost"
 
 export class PriceLogic {
     private dao: PriceDao
@@ -26,17 +9,17 @@ export class PriceLogic {
 
     }
 
-    async calculateCostFor(liftPassType, age = 25, skiingDate) {
+    async calculateCostFor(liftPassType, skiingDate, age = 25): Promise<Cost> {
         const rawCost = await this.dao.findBasePrice(liftPassType)
 
-        let response
+        let cost
         if (liftPassType === 'night') {
-            response = this.nightPass(age, rawCost)
+            cost = this.nightPass(age, rawCost)
         } else {
             let reduction = await this.calculateReduction(skiingDate)
-            response = this.dayPass(age, rawCost, reduction)
+            cost = this.dayPass(age, rawCost, reduction)
         }
-        return response
+        return cost
     }
 
 
@@ -68,7 +51,7 @@ export class PriceLogic {
         return result
     }
 
-    private async calculateReduction(skiingDate) {
+    private async calculateReduction(skiingDate: string) {
         const holidays = await this.dao.findAllHolidays()
         let notAHoliday = this.notAHoliday(holidays, skiingDate)
         let reduction = 1
