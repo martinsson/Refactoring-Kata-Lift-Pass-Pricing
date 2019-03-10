@@ -4,6 +4,7 @@
   "description": "proof of concept using tdd for code with real dependencies",
   "main": "index.js",
   "scripts": {
+    "start": "tsc && node .",
     "test": "node_modules/.bin/mocha --require ts-node/register --recursive '**/*.spec.ts'",
     "compile": "tsc"
   },
