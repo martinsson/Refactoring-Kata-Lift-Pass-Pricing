@@ -8,6 +8,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 import org.slf4j.LoggerFactory;
 
@@ -39,27 +41,28 @@ public class Prices {
                 ResultSet result = stmt.executeQuery();
                 result.next();
 
-                boolean isHoliday;
+                boolean isHoliday = false;
                 if (Integer.parseInt(req.queryParams("age")) < 6) {
                     return "{cost: 0}";
-
                 } else {
                     int reduction = 0;
                     if (!req.queryParams("type").equals("night")) {
-                        //                        const holidays = (await connection.query(
-                        //                            'SELECT * FROM `holidays`'
-                        //                        ))[0];
-                        //        
-                        //                        for (let row of holidays) {
-                        //                            const holidayDate = row.holiday.toISOString().split('T')[0];
-                        //                            if (req.queryParams("date") && req.queryParams("date") == holidayDate) {
-                        //                                isHoliday = true;
-                        //                            }
-                        //        
-                        //                        }
-                        //                        if (!isHoliday && new Date(req.queryParams("date")).getDay() == 0) {
-                        //                            reduction = 60;
-                        //                        }
+                        try (PreparedStatement s2 = connection.prepareStatement("SELECT * FROM holidays")) {
+                            ResultSet holidays = s2.executeQuery();
+                            while (holidays.next()) {
+                                String holidayDate = DateFormat.getDateInstance().format(holidays.getDate("holiday"));
+                                System.out.println(holidayDate);
+                                if (req.queryParams("date") != null && req.queryParams("date").equals(holidayDate)) {
+                                    isHoliday = true;
+                                }
+                            }
+                        }
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(DateFormat.getDateInstance().parse(req.queryParams("date")));
+                        if (!isHoliday && calendar.get(Calendar.DAY_OF_WEEK) == 1) {
+                            reduction = 60;
+                        }
 
                         // TODO apply reduction for others
                         if (Integer.parseInt(req.queryParams("age")) < 15) {
