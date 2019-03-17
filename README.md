@@ -3,56 +3,55 @@
 
 This application solves the problem of calculating the pricing for ski lift passes.
 There's some intricate logic linked to what kind of lift pass you want, your age
-and the specific date at which you'd like to ski. There's a new feature request, 
-be able to get the price for several lift passes, not just one. Currently the pricing 
-for a single lift pass is implemented, unfortunately the code as it is designed 
+and the specific date at which you'd like to ski. There's a new feature request,
+be able to get the price for several lift passes, not just one. Currently the pricing
+for a single lift pass is implemented, unfortunately the code as it is designed
 is ***not reusable***.
-You could put some high level tests in place in order to do ***preparatory refactoring*** 
-so that the new feature requires minimum effort to implement. 
+You could put some high level tests in place in order to do ***preparatory refactoring***
+so that the new feature requires minimum effort to implement.
 
-This kata models a common problem - code that that it makes no sense to unit test due to 
-bad design. 
+This kata models a common problem - code that that it makes no sense to unit test due to
+bad design.
 
 You can find a [video pitch here](http://youtube.com/watch?v=-gSyD60WAvc)
 
 ## When am I done?
+
 There are a few steps, you could do any of them.
+
 1. Cover with high level tests.
 1. Refactor the code to maximize unit testability and reuse for the new feature
 1. Pull down most of the high level tests
 1. Implement the new feature using unit tests and 1 or 2 high level tests.
- 
-## Installation  
-Set up a database a mysql database on localhost 3306. If you have docker installed the easiest thing is to use this script, 
-that will initialize a mariadb, and the data that goes with it.
+
+## Installation
+
+Set up a database a mysql database on localhost 3306. If you have docker installed the easiest thing is to use this script, that will initialize a mariadb, and the data that goes with it.
 
     ./runLocalDatabase.sh
-    
-If not you can just inject the data in 
+
+If not you can just inject the data in
 
     database/*.sql
 
 Then head on to the language of your choice and follow the Readme in there.
-         
+
 ## Tips
 
 There's a good chance you could find a design that is both easier to test, faster to
-work with and that solves the problem with minimum amount of code. One such design 
+work with and that solves the problem with minimum amount of code. One such design
 would be to rid the bulk of the logic from it's adherence to the http/rest framework
- and from the sql specificities. This is sometimes called **hexagonal architecture** 
- and it facilitates respecting the ***Testing Pyramid*** which is not currently 
- possible - there can be only top-level tests
- 
-The typical workflow would be 
+and from the sql specificities. This is sometimes called **hexagonal architecture**
+and it facilitates respecting the ***Testing Pyramid*** which is not currently
+possible - there can be only top-level tests
+
+The typical workflow would be
 
 1. Cover everything from the http layer, use a real DB
 1. Separate request data extraction and sending the response from the logic
 1. Extract a method with the pure logic, move that method to an object (ex PricingLogic)
-1. Now extract the sql stuff from PricingLogic, first to some method with a signature that
-has nothing to do with sql, then move these methods to a new class (ex PricingDao)
-1. There should be ~3/4 elements, the http layer should have the PricingLogic as 
-an injected dependency and the PricingLogic should have the PricingDao as an injected
-dependency. 
-1. Move the bulk of the high level tests down onto PricingLogic using a fake dao, write some 
-focused integration tests for the PricingDao using a real DB, there should be only a handful.
-Now the http layer and the integration of the parts can be tested with very few (one or two) high-level tests. 
+1. Now extract the sql stuff from PricingLogic, first to some method with a signature that has nothing to do with sql, then move these methods to a new class (ex PricingDao)
+1. There should be ~3/4 elements, the http layer should have the PricingLogic as an injected dependency and the PricingLogic should have the PricingDao as an injected dependency.
+1. Move the bulk of the high level tests down onto PricingLogic using a fake dao, write some focused integration tests for the PricingDao using a real DB, there should be only a handful.
+
+Now the http layer and the integration of the parts can be tested with very few (one or two) high-level tests.
