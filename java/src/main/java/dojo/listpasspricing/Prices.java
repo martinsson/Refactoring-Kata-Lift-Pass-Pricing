@@ -2,36 +2,20 @@ package dojo.listpasspricing;
 
 import static spark.Spark.get;
 import static spark.Spark.port;
-import static spark.Spark.put;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Properties;
 
-import org.hsqldb.cmdline.SqlFile;
-import org.hsqldb.cmdline.SqlToolError;
 import org.slf4j.LoggerFactory;
 
 public class Prices {
 
-    public static void createApp() throws SQLException, ClassNotFoundException {
+    public static void createApp() throws SQLException {
 
-        final Connection connection;
-
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Properties connectionOptions = new Properties();
-        connectionOptions.put("user", "root");
-        connectionOptions.put("password", "mysql");
-        // connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/lift_pass", connectionOptions);
-
-        Class.forName("org.hsqldb.jdbc.JDBCDriver");
-        connection = DriverManager.getConnection("jdbc:hsqldb:mem:lift_pass.db", "SA", "");
+        final Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/lift_pass", "root", "mysql");
 
         port(4567);
 
@@ -40,7 +24,7 @@ public class Prices {
             String liftPassType = req.queryParams("type");
             try (PreparedStatement stmt = connection.prepareStatement(//
                     "INSERT INTO base_price (type, cost) VALUES (?, ?) " + //
-                    "ON DUPLICATE KEY UPDATE cost = ?")) {
+            "ON DUPLICATE KEY UPDATE cost = ?")) {
                 stmt.setString(1, liftPassType);
                 stmt.setInt(2, liftPassCost);
                 stmt.setInt(3, liftPassCost);
@@ -124,9 +108,6 @@ public class Prices {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                try (Statement st = connection.createStatement()) {
-                    st.execute("SHUTDOWN");
-                }
                 connection.close();
             } catch (SQLException e) {
                 LoggerFactory.getLogger(Prices.class).error("connection close", e);
@@ -134,14 +115,8 @@ public class Prices {
         }));
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, SqlToolError, IOException {
-        Class.forName("org.hsqldb.jdbc.JDBCDriver");
-        try (Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:lift_pass.db", "SA", "")) {
-            SqlFile sf = new SqlFile(new File("../database/initDatabase.sql"));
-            sf.setConnection(connection);
-            sf.execute();
-        }
-
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
         createApp();
     }
 }
