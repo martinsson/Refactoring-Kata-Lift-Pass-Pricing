@@ -1,3 +1,10 @@
-node_modules
+node_modules/
+npm-debug.log
+typings
 .idea
 *.js
+*.js.map
+
+dist/
+coverage/
+.nyc_output/
