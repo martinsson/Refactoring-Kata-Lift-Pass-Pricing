@@ -48,7 +48,7 @@ public class Prices {
                     int reduction = 0;
                     boolean isHoliday = false;
                     
-                    if (Integer.parseInt(req.queryParams("age")) < 6) {
+                    if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) < 6) {
                         return "{cost: 0}";
                     } else {
                         if (!req.queryParams("type").equals("night")) {
@@ -67,17 +67,19 @@ public class Prices {
                                 }
                             }
 
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.setTime(isoFormat.parse(req.queryParams("date")));
-                            if (!isHoliday && calendar.get(Calendar.DAY_OF_WEEK) == 1) {
-                                reduction = 60;
+                            if (req.queryParams("date") != null) {
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.setTime(isoFormat.parse(req.queryParams("date")));
+                                if (!isHoliday && calendar.get(Calendar.DAY_OF_WEEK) == 1) {
+                                    reduction = 60;
+                                }
                             }
 
                             // TODO apply reduction for others
-                            if (Integer.parseInt(req.queryParams("age")) < 15) {
+                            if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) < 15) {
                                 return "{cost: " + Math.ceil(result.getInt("cost") * .7) + "}";
                             } else {
-                                if (Integer.parseInt(req.queryParams("age")) > 74) {
+                                if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) > 74) {
                                     return "{cost: " + Math.ceil(result.getInt("cost") * .4) + "}";
                                 } else {
                                     if (req.queryParams("age") == null) {
@@ -87,7 +89,7 @@ public class Prices {
                                         }
                                         return "{cost: " + Math.ceil(cost) + "}";
                                     } else {
-                                        if (Integer.parseInt(req.queryParams("age")) > 64) {
+                                        if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) > 64) {
                                             double cost = result.getInt("cost") * .75;
                                             if (reduction > 0) {
                                                 cost = cost / (1 + reduction / 100);
@@ -104,8 +106,8 @@ public class Prices {
                                 }
                             }
                         } else {
-                            if (Integer.parseInt(req.queryParams("age")) >= 6) {
-                                if (Integer.parseInt(req.queryParams("age")) > 74) {
+                            if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) >= 6) {
+                                if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) > 74) {
                                     return "{cost: " + Math.ceil(result.getInt("cost") / 2.5) + "}";
                                 } else {
                                     return "{cost: " + result.getInt("cost") + "}";
