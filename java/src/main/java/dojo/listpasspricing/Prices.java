@@ -5,16 +5,26 @@ import static spark.Spark.port;
 import static spark.Spark.put;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
+
+import org.slf4j.LoggerFactory;
 
 public class Prices {
 
-    public static void createApp() throws SQLException {
+    public static void createApp() throws SQLException, ClassNotFoundException {
 
-        // let connectionOptions = {host: 'localhost', user: 'root', database: 'lift_pass', password: 'mysql'}
-        Connection connection = null;
-        // connection = DriverManager.getConnection("");
-        // connection = DriverManager.getConnection("jdbc:hsqldb:file:lift_pass", "root", "");
+        final Connection connection;
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Properties connectionOptions = new Properties();
+        connectionOptions.put("user", "root");
+        connectionOptions.put("password", "mysql");
+        // connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/lift_pass", connectionOptions);
+
+        Class.forName("org.hsqldb.jdbc.JDBCDriver");
+        connection = DriverManager.getConnection("jdbc:hsqldb:file:../database/initDatabase.sql", "SA", "");
 
         port(4567);
 
@@ -103,15 +113,15 @@ public class Prices {
         });
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            //            try {
-            //                connection.close();
-            //            } catch (SQLException e) {
-            //                LoggerFactory.getLogger(Prices.class).error("connection close", e);
-            //            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                LoggerFactory.getLogger(Prices.class).error("connection close", e);
+            }
         }));
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
         createApp();
     }
 }
