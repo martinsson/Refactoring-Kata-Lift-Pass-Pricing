@@ -2,6 +2,7 @@ package dojo.listpasspricing;
 
 import static spark.Spark.get;
 import static spark.Spark.port;
+import static spark.Spark.put;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,7 +23,7 @@ public class Prices {
 
         port(4567);
 
-        get("/putprices", (req, res) -> {
+        put("/prices", (req, res) -> {
             int liftPassCost = Integer.parseInt(req.queryParams("cost"));
             String liftPassType = req.queryParams("type");
 
