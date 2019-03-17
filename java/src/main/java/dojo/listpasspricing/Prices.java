@@ -4,11 +4,18 @@ import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.put;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
+import org.hsqldb.cmdline.SqlFile;
+import org.hsqldb.cmdline.SqlToolError;
 import org.slf4j.LoggerFactory;
 
 public class Prices {
@@ -24,96 +31,102 @@ public class Prices {
         // connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/lift_pass", connectionOptions);
 
         Class.forName("org.hsqldb.jdbc.JDBCDriver");
-        connection = DriverManager.getConnection("jdbc:hsqldb:file:../database/initDatabase.sql", "SA", "");
+        connection = DriverManager.getConnection("jdbc:hsqldb:mem:lift_pass.db", "SA", "");
 
         port(4567);
 
-        put("/prices", (req, res) -> {
-            // req.queryParams("cost");
-            //            const liftPassCost = req.query.cost
-            //            const liftPassType = req.query.type
-            //            const [rows, fields] = await connection.execute(
-            //                'INSERT INTO `base_price` (type, cost) VALUES (?, ?) ' +
-            //                'ON DUPLICATE KEY UPDATE cost = ?',
-            //                [liftPassType, liftPassCost, liftPassCost]);
+        get("/putprices", (req, res) -> {
+            int liftPassCost = Integer.parseInt(req.queryParams("cost"));
+            String liftPassType = req.queryParams("type");
+            try (PreparedStatement stmt = connection.prepareStatement(//
+                    "INSERT INTO base_price (type, cost) VALUES (?, ?) " + //
+                    "ON DUPLICATE KEY UPDATE cost = ?")) {
+                stmt.setString(1, liftPassType);
+                stmt.setInt(2, liftPassCost);
+                stmt.setInt(3, liftPassCost);
+                stmt.execute();
+            }
             return "";
         });
 
         get("/prices", (req, res) -> {
-            //            const result = (await connection.query(
-            //                    'SELECT cost FROM `base_price` ' +
-            //                    'WHERE `type` = ? ',
-            //                    [req.query.type]))[0][0]
-            //
-            //            let reduction;
-            //            let isHoliday;
-            //            if (req.query.age < 6) {
-            //                res.send({cost: 0})
-            //            } else {
-            //                reduction = 0;
-            //                if (req.query.type !== 'night') {
-            //                    const holidays = (await connection.query(
-            //                        'SELECT * FROM `holidays`'
-            //                    ))[0]
-            //    
-            //                    for (let row of holidays) {
-            //                        const holidayDate = row.holiday.toISOString().split('T')[0]
-            //                        if (req.query.date && req.query.date === holidayDate) {
-            //                            isHoliday = true
-            //                        }
-            //    
-            //                    }
-            //                    if (!isHoliday && new Date(req.query.date).getDay() === 0) {
-            //                        reduction = 60
-            //                    }
-            //    
-            //                    // TODO apply reduction for others
-            //                    if (req.query.age < 15) {
-            //                        res.send({cost: Math.ceil(result.cost * .7)})
-            //                    } else {
-            //                        if (req.query.age > 74) {
-            //                            res.send({cost: Math.ceil(result.cost * .4)})
-            //                        } else {
-            //                            if (req.query.age === undefined) {
-            //                                let cost = result.cost
-            //                                if (reduction) {
-            //                                    cost = cost / (1 + reduction / 100)
-            //                                }
-            //                                res.send({cost: Math.ceil(cost)})
-            //                            } else {
-            //                                if (req.query.age > 64) {
-            //                                    let cost = result.cost * .75
-            //                                    if (reduction) {
-            //                                        cost = cost / (1 + reduction / 100)
-            //                                    }
-            //                                    res.send({cost: Math.ceil(cost)})
-            //                                } else {
-            //                                    let cost = result.cost
-            //                                    if (reduction) {
-            //                                        cost = cost / (1 + reduction / 100)
-            //                                    }
-            //                                    res.send({cost: Math.ceil(cost)})
-            //                                }
-            //                            }
-            //                        }
-            //                    }
-            //                } else {
-            //                    if (req.query.age >= 6) {
-            //                        if (req.query.age > 74) {
-            //                            res.send({cost: Math.ceil(result.cost / 2.5)})
-            //                        } else {
-            //                            res.send(result)
-            //                        }
-            //                    } else {
-            //                        res.send({cost: 0})
-            //                    }
-            //                }
+            try (PreparedStatement stmt = connection.prepareStatement("SELECT cost FROM base_price WHERE type = ?")) {
+                stmt.setString(1, req.queryParams("type"));
+                ResultSet result = stmt.executeQuery();
+                result.next();
 
-            return "TEST";
+                boolean isHoliday;
+                if (Integer.parseInt(req.queryParams("age")) < 6) {
+                    return "{cost: 0}";
+
+                } else {
+                    int reduction = 0;
+                    if (!req.queryParams("type").equals("night")) {
+                        //                        const holidays = (await connection.query(
+                        //                            'SELECT * FROM `holidays`'
+                        //                        ))[0];
+                        //        
+                        //                        for (let row of holidays) {
+                        //                            const holidayDate = row.holiday.toISOString().split('T')[0];
+                        //                            if (req.queryParams("date") && req.queryParams("date") == holidayDate) {
+                        //                                isHoliday = true;
+                        //                            }
+                        //        
+                        //                        }
+                        //                        if (!isHoliday && new Date(req.queryParams("date")).getDay() == 0) {
+                        //                            reduction = 60;
+                        //                        }
+
+                        // TODO apply reduction for others
+                        if (Integer.parseInt(req.queryParams("age")) < 15) {
+                            return "{cost: " + Math.ceil(result.getInt("cost") * .7) + "}";
+                        } else {
+                            if (Integer.parseInt(req.queryParams("age")) > 74) {
+                                return "{cost: " + Math.ceil(result.getInt("cost") * .4) + "}";
+                            } else {
+                                if (req.queryParams("age") == null) {
+                                    double cost = result.getInt("cost");
+                                    if (reduction > 0) {
+                                        cost = cost / (1 + reduction / 100);
+                                    }
+                                    return "{cost: " + Math.ceil(cost) + "}";
+                                } else {
+                                    if (Integer.parseInt(req.queryParams("age")) > 64) {
+                                        double cost = result.getInt("cost") * .75;
+                                        if (reduction > 0) {
+                                            cost = cost / (1 + reduction / 100);
+                                        }
+                                        return "{cost: " + Math.ceil(cost) + "}";
+                                    } else {
+                                        double cost = result.getInt("cost");
+                                        if (reduction > 0) {
+                                            cost = cost / (1 + reduction / 100);
+                                        }
+                                        return "{cost: " + Math.ceil(cost) + "}";
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        if (Integer.parseInt(req.queryParams("age")) >= 6) {
+                            if (Integer.parseInt(req.queryParams("age")) > 74) {
+                                return "{cost: " + Math.ceil(result.getInt("cost") / 2.5) + "}";
+                            } else {
+                                return "{cost: " + result.getInt("cost") + "}";
+                            }
+                        } else {
+                            return "{cost: 0}";
+                        }
+                    }
+                }
+            }
         });
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
+                try (Statement st = connection.createStatement()) {
+                    st.execute("SHUTDOWN");
+                }
                 connection.close();
             } catch (SQLException e) {
                 LoggerFactory.getLogger(Prices.class).error("connection close", e);
@@ -121,7 +134,14 @@ public class Prices {
         }));
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, SqlToolError, IOException {
+        Class.forName("org.hsqldb.jdbc.JDBCDriver");
+        try (Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:lift_pass.db", "SA", "")) {
+            SqlFile sf = new SqlFile(new File("../database/initDatabase.sql"));
+            sf.setConnection(connection);
+            sf.execute();
+        }
+
         createApp();
     }
 }
