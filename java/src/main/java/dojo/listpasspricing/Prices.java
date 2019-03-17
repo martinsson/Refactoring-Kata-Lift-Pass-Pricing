@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.slf4j.LoggerFactory;
@@ -50,8 +50,7 @@ public class Prices {
                         try (PreparedStatement s2 = connection.prepareStatement("SELECT * FROM holidays")) {
                             ResultSet holidays = s2.executeQuery();
                             while (holidays.next()) {
-                                String holidayDate = DateFormat.getDateInstance().format(holidays.getDate("holiday"));
-                                System.out.println(holidayDate);
+                                String holidayDate = new SimpleDateFormat("YYYY-MM-DD").format(holidays.getDate("holiday"));
                                 if (req.queryParams("date") != null && req.queryParams("date").equals(holidayDate)) {
                                     isHoliday = true;
                                 }
@@ -59,7 +58,7 @@ public class Prices {
                         }
 
                         Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(DateFormat.getDateInstance().parse(req.queryParams("date")));
+                        calendar.setTime(new SimpleDateFormat("YYYY-MM-DD").parse(req.queryParams("date")));
                         if (!isHoliday && calendar.get(Calendar.DAY_OF_WEEK) == 1) {
                             reduction = 60;
                         }
