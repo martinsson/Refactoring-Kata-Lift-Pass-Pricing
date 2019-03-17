@@ -5,12 +5,7 @@ import static spark.Spark.port;
 import static spark.Spark.put;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import org.slf4j.LoggerFactory;
-
-import spark.Spark;
 
 public class Prices {
 
@@ -104,19 +99,18 @@ public class Prices {
             //                    }
             //                }
 
-            return "";
+            return "TEST";
         });
 
-        new Thread(() -> {
-//            Spark.awaitStop();
-//            try {
-//                connection.close();
-//            } catch (SQLException e) {
-//                LoggerFactory.getLogger(Prices.class).error("connection close", e);
-//            }
-        }).start();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            //            try {
+            //                connection.close();
+            //            } catch (SQLException e) {
+            //                LoggerFactory.getLogger(Prices.class).error("connection close", e);
+            //            }
+        }));
     }
-    
+
     public static void main(String[] args) throws SQLException {
         createApp();
     }
