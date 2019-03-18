@@ -74,7 +74,7 @@ async function createApp() {
             } else {
                 if (req.query.age >= 6) {
                     if (req.query.age > 64) {
-                        res.send({cost: Math.ceil(result.cost / 2.5)})
+                        res.send({cost: Math.ceil(result.cost * .4)})
                     } else {
                         res.send(result)
                     }
