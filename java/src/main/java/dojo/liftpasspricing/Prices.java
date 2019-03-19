@@ -1,4 +1,4 @@
-package dojo.listpasspricing;
+package dojo.liftpasspricing;
 
 import static spark.Spark.get;
 import static spark.Spark.port;
