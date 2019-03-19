@@ -9,7 +9,7 @@ export async function createDatabaseConnection(connectionOptions) {
     return {
         query(query, params: any[] = []) {
             return new Promise((resolve) => {
-                setTimeout(resolve, 10)
+                setTimeout(resolve, 50)
             }).then(() => {
                 return connection.execute(query, params)
             })
@@ -59,8 +59,8 @@ async function createApp() {
                         let d = new Date(req.query.date)
                         if (d.getFullYear() === holiday.getFullYear()
                             && d.getMonth() === holiday.getMonth()
-                            && d.getDate() === holiday.getDate()
-                        ) {
+                            && d.getDate() === holiday.getDate()) {
+
                             isHoliday = true
                         }
                     }
@@ -80,16 +80,10 @@ async function createApp() {
                         res.send({cost: Math.ceil(cost)})
                     } else {
                         if (req.query.age > 64) {
-                            let cost = result.cost * .75
-                            if (reduction) {
-                                cost = cost * (1 - reduction / 100)
-                            }
+                            let cost = result.cost * .75 * (1 - reduction / 100)
                             res.send({cost: Math.ceil(cost)})
                         } else {
-                            let cost = result.cost
-                            if (reduction) {
-                                cost = cost * (1 - reduction / 100)
-                            }
+                            let cost = result.cost * (1 - reduction / 100)
                             res.send({cost: Math.ceil(cost)})
                         }
                     }
