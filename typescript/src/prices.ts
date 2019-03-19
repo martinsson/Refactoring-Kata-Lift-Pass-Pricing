@@ -1,16 +1,35 @@
 import express from "express";
 import mysql from "mysql2/promise"
 
+export async function createDatabaseConnection(connectionOptions) {
+    let connection = await mysql.createConnection(connectionOptions)
+
+    // make the database connection not too fast so that
+    // we actually feel a slight slowness in the tests
+    return {
+        query(query, params: any[] = []) {
+            return new Promise((resolve) => {
+                setTimeout(resolve, 10)
+            }).then(() => {
+                return connection.execute(query, params)
+            })
+        },
+        close() {
+            return connection.close()
+        }
+    }
+}
+
 async function createApp() {
     const app = express()
 
     let connectionOptions = {host: 'localhost', user: 'root', database: 'lift_pass', password: 'mysql'}
-    const connection = await mysql.createConnection(connectionOptions);
+    const connection = await createDatabaseConnection(connectionOptions);
 
     app.put('/prices', async (req, res) => {
         const liftPassCost = req.query.cost
         const liftPassType = req.query.type
-        const [rows, fields] = await connection.execute(
+        const [rows, fields] = await connection.query(
             'INSERT INTO `base_price` (type, cost) VALUES (?, ?) ' +
             'ON DUPLICATE KEY UPDATE cost = ?',
             [liftPassType, liftPassCost, liftPassCost]);
