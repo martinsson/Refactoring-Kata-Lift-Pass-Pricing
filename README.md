@@ -1,4 +1,3 @@
-
 # Lift pass pricing
 
 This application solves the problem of calculating the pricing for ski lift passes.
@@ -10,8 +9,7 @@ is ***not reusable***.
 You could put some high level tests in place in order to do ***preparatory refactoring***
 so that the new feature requires minimum effort to implement.
 
-This kata models a common problem - code that that it makes no sense to unit test due to
-bad design.
+This kata models a common problem - code that that it makes no sense to unit test due to bad design.
 
 You can find a [video pitch here](http://youtube.com/watch?v=-gSyD60WAvc)
 
@@ -26,13 +24,14 @@ There are a few steps, you could do any of them.
 
 ## Installation
 
-Set up a database a mysql database on localhost 3306. If you have docker installed the easiest thing is to use this script, that will initialize a mariadb, and the data that goes with it.
+Set up a MySQL database on localhost 3306 with user `root` and password `mysql`.
+If you have Docker installed the easiest thing is to use this script, that will initialize a [MariaDB](https://mariadb.org/).
 
     ./runLocalDatabase.sh
 
-If not you can just inject the data in
+Inject the data with
 
-    database/*.sql
+    mysql -u root -p mysql < ./database/initDatabase.sql
 
 Then head on to the language of your choice and follow the Readme in there.
 
@@ -54,4 +53,4 @@ The typical workflow would be
 1. There should be ~3/4 elements, the http layer should have the PricingLogic as an injected dependency and the PricingLogic should have the PricingDao as an injected dependency.
 1. Move the bulk of the high level tests down onto PricingLogic using a fake dao, write some focused integration tests for the PricingDao using a real DB, there should be only a handful.
 
-Now the http layer and the integration of the parts can be tested with very few (one or two) high-level tests.
+Now the HTTP layer and the integration of the parts can be tested with very few (one or two) high-level tests.
