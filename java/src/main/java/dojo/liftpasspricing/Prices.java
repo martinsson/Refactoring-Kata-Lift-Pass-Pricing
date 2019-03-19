@@ -13,11 +13,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.slf4j.LoggerFactory;
-
 public class Prices {
 
-    public static void createApp() throws SQLException {
+    public static Connection createApp() throws SQLException {
 
         final Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/lift_pass", "root", "mysql");
 
@@ -121,17 +119,7 @@ public class Prices {
             }
         });
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                LoggerFactory.getLogger(Prices.class).error("connection close", e);
-            }
-        }));
+        return connection;
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        createApp();
-    }
 }
