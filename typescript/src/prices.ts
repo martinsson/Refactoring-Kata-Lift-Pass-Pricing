@@ -35,13 +35,20 @@ async function createApp() {
                 ))[0]
 
                 for (let row of holidays) {
-                    const holidayDate = row.holiday.toISOString().split('T')[0]
-                    if (req.query.date && req.query.date === holidayDate) {
-                        isHoliday = true
+                    let holiday: Date = row.holiday
+                    if (req.query.date) {
+                        let d = new Date(req.query.date)
+                        if (d.getFullYear() === holiday.getFullYear()
+                            && d.getMonth() === holiday.getMonth()
+                            && d.getDate() === holiday.getDate()
+                        ) {
+                            isHoliday = true
+                        }
                     }
 
                 }
-                if (!isHoliday && new Date(req.query.date).getDay() === 0) {
+
+                if (!isHoliday && new Date(req.query.date).getDay() === 1) {
                     reduction = 35
                 }
 
@@ -50,10 +57,7 @@ async function createApp() {
                     res.send({cost: Math.ceil(result.cost * .7)})
                 } else {
                     if (req.query.age === undefined) {
-                        let cost = result.cost
-                        if (reduction) {
-                            cost = cost * (1 - reduction / 100)
-                        }
+                        let cost = result.cost * (1 - reduction / 100)
                         res.send({cost: Math.ceil(cost)})
                     } else {
                         if (req.query.age > 64) {
