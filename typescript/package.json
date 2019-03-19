@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node .",
-    "test": "node_modules/.bin/mocha --require ts-node/register --recursive 'test/**/*.spec.ts'",
+    "test": "node_modules/.bin/mocha --require ts-node/register --recursive test/**/*.spec.ts",
     "compile": "tsc"
   },
   "readme": "README.md",
