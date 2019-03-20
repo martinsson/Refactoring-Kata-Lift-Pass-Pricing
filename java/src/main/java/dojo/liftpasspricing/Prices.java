@@ -51,7 +51,7 @@ public class Prices {
                         return "{ \"cost\": 0}";
                     } else {
                         if (!req.queryParams("type").equals("night")) {
-                            DateFormat isoFormat = new SimpleDateFormat("YYYY-MM-DD");
+                            DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                             try (PreparedStatement holidayStmt = connection.prepareStatement("SELECT * FROM holidays")) {
                                 try (ResultSet holidays = holidayStmt.executeQuery()) {
@@ -76,30 +76,30 @@ public class Prices {
 
                             // TODO apply reduction for others
                             if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) < 15) {
-                                return "{ \"cost\": " + Math.ceil(result.getInt("cost") * .7) + "}";
+                                return "{ \"cost\": " + (int) Math.ceil(result.getInt("cost") * .7) + "}";
                             } else {
                                 if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) > 74) {
-                                    return "{ \"cost\": " + Math.ceil(result.getInt("cost") * .4) + "}";
+                                    return "{ \"cost\": " + (int) Math.ceil(result.getInt("cost") * .4) + "}";
                                 } else {
                                     if (req.queryParams("age") == null) {
                                         double cost = result.getInt("cost");
                                         if (reduction > 0) {
                                             cost = cost / (1 + reduction / 100);
                                         }
-                                        return "{ \"cost\": " + Math.ceil(cost) + "}";
+                                        return "{ \"cost\": " + (int) Math.ceil(cost) + "}";
                                     } else {
                                         if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) > 64) {
                                             double cost = result.getInt("cost") * .75;
                                             if (reduction > 0) {
                                                 cost = cost / (1 + reduction / 100);
                                             }
-                                            return "{ \"cost\": " + Math.ceil(cost) + "}";
+                                            return "{ \"cost\": " + (int) Math.ceil(cost) + "}";
                                         } else {
                                             double cost = result.getInt("cost");
                                             if (reduction > 0) {
                                                 cost = cost / (1 + reduction / 100);
                                             }
-                                            return "{ \"cost\": " + Math.ceil(cost) + "}";
+                                            return "{ \"cost\": " + (int) Math.ceil(cost) + "}";
                                         }
                                     }
                                 }
@@ -107,7 +107,7 @@ public class Prices {
                         } else {
                             if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) >= 6) {
                                 if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) > 74) {
-                                    return "{ \"cost\": " + Math.ceil(result.getInt("cost") / 2.5) + "}";
+                                    return "{ \"cost\": " + (int) Math.ceil(result.getInt("cost") / 2.5) + "}";
                                 } else {
                                     return "{ \"cost\": " + result.getInt("cost") + "}";
                                 }
