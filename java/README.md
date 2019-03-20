@@ -8,7 +8,7 @@ To install dependencies:
 
     mvn verify
 
-The project uses [JUnit 4](https://junit.org/junit4/).
+The project uses [JUnit 5](https://junit.org/junit5/) and [REST assured](http://rest-assured.io/).
 
 To run the tests:
 
