@@ -75,14 +75,12 @@ public class PricesTest {
     }
 
     // Monday x percent off
-    // TODO fix 24th => 25th
-
     @ParameterizedTest(name = "Monday are 40 off, but not during holidays at {1}")
-    @CsvSource({ "25, '2019-02-24', 35", // Sunday holidays, no deal
+    @CsvSource({ "25, '2019-02-24', 35", // Sunday, no deal
                  "25, '2019-02-25', 35", // Monday holidays, no deal
                  "25, '2019-03-28', 35", // not a Monday
-                 "25, '2019-03-24', 22", // ~40% off
-                 "65, '2019-03-24', 17"}) // ~40% off
+                 "25, '2019-03-25', 22", // ~40% off
+                 "65, '2019-03-25', 17"}) // ~40% off
     public void mondays_are_40_off(int age, String date, int expectedCost){
         JsonPath json = obtainPrice("type", "1jour", "age", Integer.toString(age), "date", date);
         int cost = json.get("cost");
@@ -95,8 +93,8 @@ public class PricesTest {
         return RestAssured.given().
             contentType("application/json").
             accept("application/json").
-            port(Spark.port());
-            //port(5010);
+            port(4567); // Java 
+            //port(5010); // Typescript
     }
     
     private JsonPath obtainPrice(String... keyValue) {
