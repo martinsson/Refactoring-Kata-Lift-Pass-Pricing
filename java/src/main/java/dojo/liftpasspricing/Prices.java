@@ -6,6 +6,7 @@ import static spark.Spark.port;
 import static spark.Spark.put;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,7 +58,8 @@ public class Prices {
                                 try (ResultSet holidays = holidayStmt.executeQuery()) {
 
                                     while (holidays.next()) {
-                                        String holidayDate = isoFormat.format(holidays.getDate("holiday"));
+                                        Date row = holidays.getDate("holiday");
+                                        String holidayDate = isoFormat.format(row);
                                         if (req.queryParams("date") != null && req.queryParams("date").equals(holidayDate)) {
                                             isHoliday = true;
                                         }
