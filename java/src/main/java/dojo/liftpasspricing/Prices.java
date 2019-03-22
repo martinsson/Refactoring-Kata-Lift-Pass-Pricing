@@ -84,20 +84,20 @@ public class Prices {
                                     if (req.queryParams("age") == null) {
                                         double cost = result.getInt("cost");
                                         if (reduction > 0) {
-                                            cost = cost / (1 + reduction / 100);
+                                            cost = cost / (1 + reduction / 100.0);
                                         }
                                         return "{ \"cost\": " + (int) Math.ceil(cost) + "}";
                                     } else {
                                         if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) > 64) {
                                             double cost = result.getInt("cost") * .75;
                                             if (reduction > 0) {
-                                                cost = cost / (1 + reduction / 100);
+                                                cost = cost / (1 + reduction / 100.0);
                                             }
                                             return "{ \"cost\": " + (int) Math.ceil(cost) + "}";
                                         } else {
                                             double cost = result.getInt("cost");
                                             if (reduction > 0) {
-                                                cost = cost / (1 + reduction / 100);
+                                                cost = cost / (1 + reduction / 100.0);
                                             }
                                             return "{ \"cost\": " + (int) Math.ceil(cost) + "}";
                                         }
