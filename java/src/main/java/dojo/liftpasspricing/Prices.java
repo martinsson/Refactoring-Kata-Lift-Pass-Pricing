@@ -6,7 +6,6 @@ import static spark.Spark.port;
 import static spark.Spark.put;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -58,10 +57,14 @@ public class Prices {
                                 try (ResultSet holidays = holidayStmt.executeQuery()) {
 
                                     while (holidays.next()) {
-                                        Date row = holidays.getDate("holiday");
-                                        String holidayDate = isoFormat.format(row);
-                                        if (req.queryParams("date") != null && req.queryParams("date").equals(holidayDate)) {
-                                            isHoliday = true;
+                                        java.sql.Date holiday = holidays.getDate("holiday");
+                                        if (req.queryParams("date") != null) {
+                                            java.util.Date d = isoFormat.parse(req.queryParams("date"));
+                                            if (d.getYear() == holiday.getYear() &&
+                                                d.getMonth() == holiday.getMonth() &&
+                                                d.getDate() == holiday.getDate()) {
+                                                isHoliday = true;
+                                            }
                                         }
                                     }
 
@@ -71,7 +74,7 @@ public class Prices {
                             if (req.queryParams("date") != null) {
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.setTime(isoFormat.parse(req.queryParams("date")));
-                                if (!isHoliday && calendar.get(Calendar.DAY_OF_WEEK) == 1) {
+                                if (!isHoliday && calendar.get(Calendar.DAY_OF_WEEK) == 2) {
                                     reduction = 60;
                                 }
                             }
