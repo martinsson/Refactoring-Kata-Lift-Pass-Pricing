@@ -34,7 +34,6 @@ namespace LiftPassPricing
                 }
 
                 // TODO should return 204 in all languages
-                // see https://stackoverflow.com/questions/31819021/override-the-default-content-type-for-responses-in-nancyfx
                 return "";
             });
 
@@ -158,6 +157,11 @@ namespace LiftPassPricing
                 }
 
             });
+
+            After += ctx =>
+            {
+                ctx.Response.ContentType = "application/json";
+            };
 
         }
 
