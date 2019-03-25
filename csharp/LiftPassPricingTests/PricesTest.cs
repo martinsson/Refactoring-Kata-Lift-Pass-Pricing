@@ -1,3 +1,4 @@
+using System;
 using Xunit;
 using Nancy;
 using Nancy.Testing;
@@ -6,7 +7,7 @@ using LiftPassPricing;
 namespace LiftPassPricingTests
 {
     /// <seealso>"http://www.marcusoft.net/2013/01/NancyTesting1.html"</seealso>
-    public class PricesTest
+    public class PricesTest : IDisposable
     {
         private readonly Prices prices;
 
