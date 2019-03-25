@@ -55,7 +55,7 @@ namespace LiftPassPricing
                     }
                     else
                     {
-                        if (!this.Request.Query["type"].Equals("night"))
+                        if (!"night".Equals(this.Request.Query["type"]))
                         {
                             using (var holidayCmd = new MySqlCommand("SELECT * FROM holidays", connection))
                             {
