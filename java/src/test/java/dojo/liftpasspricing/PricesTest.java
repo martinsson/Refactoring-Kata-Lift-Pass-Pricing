@@ -34,7 +34,10 @@ public class PricesTest {
             params("type", type, "cost", cost).
             put("/prices").
         then().
-            statusCode(200);
+            assertThat().
+                contentType("application/json").
+            assertThat().
+                statusCode(200); // TODO should be 204
     }
 
     @AfterEach
@@ -51,10 +54,14 @@ public class PricesTest {
     }
 
     @ParameterizedTest(name = "the 1 day age {0} price pass is rounded up to {1}")
-    @CsvSource({ "25, 35", 
-                 "14, 25", 
-                 "5, 0", 
+    @CsvSource({ "5, 0",
+                 "6, 25",
+                 "14, 25",
+                 "15, 35",
+                 "25, 35", 
+                 "64, 35", 
                  "65, 27", 
+                 "74, 27", 
                  "75, 14"})
     public void the_1_day_price_pass_is_rounded_up(int age, int expectedCost) {
         JsonPath json = obtainPrice("type", "1jour", "age", Integer.toString(age));
@@ -63,15 +70,19 @@ public class PricesTest {
     }
 
     @ParameterizedTest
-    @CsvSource({ "25, 19", 
-                 "14, 19", 
-                 "5, 0", 
+    @CsvSource({ "5, 0", 
+                 "6, 19",
+                 "14, 19",
+                 "15, 19",
+                 "25, 19", 
+                 "64, 19", 
                  "65, 19", 
+                 "74, 19", 
                  "75, 8"})
     public void the_night_pass_is_19_for_everyone_but_very_young_and_very_old_people(int age, int expectedCost){
         JsonPath json = obtainPrice("type", "night", "age", Integer.toString(age));
         int cost = json.get("cost");
-        assertEquals(expectedCost, cost);
+        assertEquals(expectedCost, cost, "age " + age);
     }
 
     // Monday x percent off
@@ -95,6 +106,7 @@ public class PricesTest {
             accept("application/json").
             port(4567); // Java 
             //port(5010); // Typescript
+            //port(5000); // C#
     }
     
     private JsonPath obtainPrice(String... keyValue) {
@@ -108,7 +120,10 @@ public class PricesTest {
         return when.
                     get("/prices").
                 then().
-                    statusCode(200).
+                    assertThat().
+                        contentType("application/json").
+                    assertThat().
+                        statusCode(200).
                 extract().jsonPath();
     }
 
