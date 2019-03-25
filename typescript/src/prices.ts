@@ -4,7 +4,7 @@ import mysql from "mysql2/promise"
 async function createApp() {
     const app = express()
 
-    let connectionOptions = {host: 'localhost', user: 'root', database: 'lift_pass', password: 'mysql'}
+    let connectionOptions = { host: 'localhost', user: 'root', database: 'lift_pass', password: 'mysql' }
     const connection = await mysql.createConnection(connectionOptions);
 
     app.put('/prices', async (req, res) => {
@@ -26,7 +26,7 @@ async function createApp() {
         let reduction;
         let isHoliday;
         if (req.query.age < 6) {
-            res.send({cost: 0})
+            res.send({ cost: 0 })
         } else {
             reduction = 0;
             if (req.query.type !== 'night') {
@@ -47,30 +47,30 @@ async function createApp() {
 
                 // TODO apply reduction for others
                 if (req.query.age < 15) {
-                    res.send({cost: Math.ceil(result.cost * .7)})
+                    res.send({ cost: Math.ceil(result.cost * .7) })
                 } else {
                     if (req.query.age > 74) {
-                        res.send({cost: Math.ceil(result.cost * .4)})
+                        res.send({ cost: Math.ceil(result.cost * .4) })
                     } else {
                         if (req.query.age === undefined) {
                             let cost = result.cost
                             if (reduction) {
                                 cost = cost / (1 + reduction / 100)
                             }
-                            res.send({cost: Math.ceil(cost)})
+                            res.send({ cost: Math.ceil(cost) })
                         } else {
                             if (req.query.age > 64) {
                                 let cost = result.cost * .75
                                 if (reduction) {
                                     cost = cost / (1 + reduction / 100)
                                 }
-                                res.send({cost: Math.ceil(cost)})
+                                res.send({ cost: Math.ceil(cost) })
                             } else {
                                 let cost = result.cost
                                 if (reduction) {
                                     cost = cost / (1 + reduction / 100)
                                 }
-                                res.send({cost: Math.ceil(cost)})
+                                res.send({ cost: Math.ceil(cost) })
                             }
                         }
                     }
@@ -78,18 +78,17 @@ async function createApp() {
             } else {
                 if (req.query.age >= 6) {
                     if (req.query.age > 74) {
-                        res.send({cost: Math.ceil(result.cost / 2.5)})
+                        res.send({ cost: Math.ceil(result.cost / 2.5) })
                     } else {
                         res.send(result)
                     }
                 } else {
-                    res.send({cost: 0})
+                    res.send({ cost: 0 })
                 }
             }
         }
     })
-    return {app, connection}
+    return { app, connection }
 }
 
-export {createApp}
-
+export { createApp }
