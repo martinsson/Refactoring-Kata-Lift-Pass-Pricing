@@ -17,13 +17,6 @@ CREATE TABLE IF NOT EXISTS lift_pass.holidays (
     description VARCHAR(255) NOT NULL,
     PRIMARY KEY (holiday)
 );
-INSERT INTO lift_pass.holidays (holiday, description) VALUES ('2018.10.26', 'Nationalfeiertag');
-INSERT INTO lift_pass.holidays (holiday, description) VALUES ('2018.11.01', 'Allerheiligen');
-INSERT INTO lift_pass.holidays (holiday, description) VALUES ('2018.12.08', 'Mariae Empfaengnis');
-INSERT INTO lift_pass.holidays (holiday, description) VALUES ('2018.12.25', 'Christtag');
-INSERT INTO lift_pass.holidays (holiday, description) VALUES ('2019.01.01', 'Neujahr');
 INSERT INTO lift_pass.holidays (holiday, description) VALUES ('2019-02-18', 'winter');
 INSERT INTO lift_pass.holidays (holiday, description) VALUES ('2019-02-25', 'winter');
 INSERT INTO lift_pass.holidays (holiday, description) VALUES ('2019-03-04', 'winter');
-INSERT INTO lift_pass.holidays (holiday, description) VALUES ('2019.01.06', 'Heilige Drei Koenige');
-INSERT INTO lift_pass.holidays (holiday, description) VALUES ('2019.04.22', 'Ostermontag');
