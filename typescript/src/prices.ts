@@ -1,16 +1,11 @@
 import express from "express";
-import mysql from "mysql2/promise"
 
-async function createApp() {
+function createAppWithConnection(connection) {
     const app = express()
-
-    let connectionOptions = {host: 'localhost', user: 'root', database: 'lift_pass', password: 'mysql'}
-    const connection = await mysql.createConnection(connectionOptions)
-
     app.put('/prices', async (req, res) => {
         const liftPassCost = req.query.cost
         const liftPassType = req.query.type
-        const [rows, fields] = await connection.query(
+        const [rows, fields] = await connection.execute(
             'INSERT INTO `base_price` (type, cost) VALUES (?, ?) ' +
             'ON DUPLICATE KEY UPDATE cost = ?',
             [liftPassType, liftPassCost, liftPassCost]);
@@ -26,7 +21,7 @@ async function createApp() {
         let reduction;
         let isHoliday;
         if (req.query.age < 6) {
-            res.send({cost: 0})
+            res.send({ cost: 0 })
         } else {
             reduction = 0;
             if (req.query.type !== 'night') {
@@ -54,7 +49,7 @@ async function createApp() {
 
                 // TODO apply reduction for others
                 if (req.query.age < 15) {
-                    res.send({cost: Math.ceil(result.cost * .7)})
+                    res.send({ cost: Math.ceil(result.cost * .7) })
                 } else {
                     if (req.query.age === undefined) {
                         let cost = result.cost * (1 - reduction / 100)
@@ -77,13 +72,12 @@ async function createApp() {
                         res.send(result)
                     }
                 } else {
-                    res.send({cost: 0})
+                    res.send({ cost: 0 })
                 }
             }
         }
     })
-    return {app, connection}
+    return app
 }
 
-export {createApp}
-
+export { createAppWithConnection }
