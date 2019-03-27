@@ -47,11 +47,60 @@ namespace LiftPassPricingTests
             Assert.Equal(35, json.Cost);
         }
 
-        private Response ObtainPrice(string paramName, string paramValue)
+        [Theory]
+        [InlineData(5, 0)]
+        [InlineData(6, 25)]
+        [InlineData(14, 25)]
+        [InlineData(15, 35)]
+        [InlineData(25, 35)]
+        [InlineData(64, 35)]
+        [InlineData(65, 27)]
+        public void WorksForAllAges(int age, int expectedCost)
+        {
+            Response json = ObtainPrice("type", "1jour", "age", age.ToString());
+            Assert.Equal(expectedCost, json.Cost);
+        }
+
+        [Fact]
+        public void DefaultNightCost()
+        {
+            Response json = ObtainPrice("type", "night");
+            Assert.Equal(0, json.Cost); // TODO should be 19
+        }
+
+        [Theory]
+        [InlineData(5, 0)]
+        [InlineData(6, 19)]
+        [InlineData(25, 19)]
+        [InlineData(64, 19)]
+        [InlineData(65, 8)]
+        public void WorksForNightPasses(int age, int expectedCost)
+        {
+            Response json = ObtainPrice("type", "night", "age", age.ToString());
+            Assert.Equal(expectedCost, json.Cost);
+        }
+
+        [Theory]
+        [InlineData(15, "2019-02-22", 35)]
+        [InlineData(15, "2019-02-25", 35)]
+        [InlineData(15, "2019-03-11", 23)]
+        [InlineData(65, "2019-03-11", 18)]
+        public void WorksForMondayDeals(int age, string date, int expectedCost)
+        {
+            Response json = ObtainPrice("type", "1jour", "age", age.ToString(), "date", date);
+            Assert.Equal(expectedCost, json.Cost);
+        }
+
+        // TODO 2-4, and 5, 6 day pass
+
+        private Response ObtainPrice(params string[] keyValuePairs)
         {
             var result = browser.Get("/prices", with =>
             {
-                with.Query(paramName, paramValue);
+                for (int i = 0; i < keyValuePairs.Length; i += 2)
+                {
+                    with.Query(keyValuePairs[i], keyValuePairs[i + 1]);
+                }
                 with.HttpRequest();
             });
 
