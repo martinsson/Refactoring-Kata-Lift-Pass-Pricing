@@ -5,7 +5,7 @@ async function createApp() {
     const app = express()
 
     let connectionOptions = {host: 'localhost', user: 'root', database: 'lift_pass', password: 'mysql'}
-    const connection = await createDatabaseConnection(connectionOptions);
+    const connection = await mysql.createConnection(connectionOptions)
 
     app.put('/prices', async (req, res) => {
         const liftPassCost = req.query.cost
