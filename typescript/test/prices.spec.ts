@@ -24,9 +24,12 @@ describe('prices', () => {
     });
 
     [
-        {age: 15, expectedCost: 35},
-        {age: 14, expectedCost: 25},
         {age: 5, expectedCost: 0},
+        {age: 6, expectedCost: 25},
+        {age: 14, expectedCost: 25},
+        {age: 15, expectedCost: 35},
+        {age: 25, expectedCost: 35},
+        {age: 64, expectedCost: 35},
         {age: 65, expectedCost: 27},
     ]
         .forEach(({age, expectedCost}) => {
@@ -38,10 +41,19 @@ describe('prices', () => {
             });
         });
 
+    xit('default night cost', async () => {
+        const {body} = await request(app)
+            .get('/prices?type=night')
+
+        expect(body.cost).equal(19)
+    });
+
     [
-        {age: 25, expectedCost: 19},
-        {age: 65, expectedCost: 8},
         {age: 5, expectedCost: 0},
+        {age: 6, expectedCost: 19},
+        {age: 25, expectedCost: 19},
+        {age: 64, expectedCost: 19},
+        {age: 65, expectedCost: 8},
     ]
         .forEach(({age, expectedCost}) => {
             it('works for night passes', async () => {
