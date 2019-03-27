@@ -33,30 +33,36 @@ namespace LiftPassPricing
                     command.ExecuteNonQuery();
                 }
 
-                // TODO should return 204 in all languages
                 return "";
             });
 
             Get("/prices", _ =>
             {
-                using (var costCmd = new MySqlCommand("SELECT cost FROM base_price WHERE type = @type", connection))
+                int? age = this.Request.Query["age"] != null ? Int32.Parse(this.Request.Query["age"]) : null;
+
+                using (var costCmd = new MySqlCommand( //
+                    "SELECT cost FROM base_price " + //
+                    "WHERE type = @type", connection))
                 {
                     costCmd.Parameters.AddWithValue("@type", this.Request.Query["type"]);
                     costCmd.Prepare();
                     double result = (int)costCmd.ExecuteScalar();
 
-                    var reduction = 0;
+                    int reduction;
                     var isHoliday = false;
 
-                    if (this.Request.Query["age"] != null && Int32.Parse(this.Request.Query["age"]) < 6)
+                    if (age != null && age < 6)
                     {
                         return "{ \"cost\": 0}";
                     }
                     else
                     {
+                        reduction = 0;
+
                         if (!"night".Equals(this.Request.Query["type"]))
                         {
-                            using (var holidayCmd = new MySqlCommand("SELECT * FROM holidays", connection))
+                            using (var holidayCmd = new MySqlCommand( //
+                                "SELECT * FROM holidays", connection))
                             {
                                 holidayCmd.Prepare();
                                 using (var holidays = holidayCmd.ExecuteReader())
@@ -85,63 +91,44 @@ namespace LiftPassPricing
                                 DateTime d = DateTime.ParseExact(this.Request.Query["date"], "yyyy-MM-dd", CultureInfo.InvariantCulture);
                                 if (!isHoliday && (int)d.DayOfWeek == 1)
                                 {
-                                    reduction = 60;
+                                    reduction = 35;
                                 }
                             }
 
                             // TODO apply reduction for others
-                            if (this.Request.Query["age"] != null && Int32.Parse(this.Request.Query["age"]) < 15)
+                            if (age != null && age < 15)
                             {
                                 return "{ \"cost\": " + (int)Math.Ceiling(result * .7) + "}";
                             }
                             else
                             {
-                                if (this.Request.Query["age"] != null && Int32.Parse(this.Request.Query["age"]) > 74)
+                                if (age == null)
                                 {
-                                    return "{ \"cost\": " + (int)Math.Ceiling(result * .4) + "}";
+                                    double cost = result * (1 - reduction / 100.0);
+                                    return "{ \"cost\": " + (int)Math.Ceiling(cost) + "}";
                                 }
                                 else
                                 {
-                                    if (this.Request.Query["age"] == null)
+                                    if (age > 64)
                                     {
-                                        double cost = result;
-                                        if (reduction > 0)
-                                        {
-                                            cost = cost / (1 + reduction / 100.0);
-                                        }
+                                        double cost = result * .75 * (1 - reduction / 100.0);
                                         return "{ \"cost\": " + (int)Math.Ceiling(cost) + "}";
                                     }
                                     else
                                     {
-                                        if (this.Request.Query["age"] != null && Int32.Parse(this.Request.Query["age"]) > 64)
-                                        {
-                                            double cost = result * .75;
-                                            if (reduction > 0)
-                                            {
-                                                cost = cost / (1 + reduction / 100.0);
-                                            }
-                                            return "{ \"cost\": " + (int)Math.Ceiling(cost) + "}";
-                                        }
-                                        else
-                                        {
-                                            double cost = result;
-                                            if (reduction > 0)
-                                            {
-                                                cost = cost / (1 + reduction / 100.0);
-                                            }
-                                            return "{ \"cost\": " + (int)Math.Ceiling(cost) + "}";
-                                        }
+                                        double cost = result * (1 - reduction / 100.0);
+                                        return "{ \"cost\": " + (int)Math.Ceiling(cost) + "}";
                                     }
                                 }
                             }
                         }
                         else
                         {
-                            if (this.Request.Query["age"] != null && Int32.Parse(this.Request.Query["age"]) >= 6)
+                            if (age != null && age >= 6)
                             {
-                                if (this.Request.Query["age"] != null && Int32.Parse(this.Request.Query["age"]) > 74)
+                                if (age > 64)
                                 {
-                                    return "{ \"cost\": " + (int)Math.Ceiling(result / 2.5) + "}";
+                                    return "{ \"cost\": " + (int)Math.Ceiling(result * .4) + "}";
                                 }
                                 else
                                 {
@@ -155,7 +142,6 @@ namespace LiftPassPricing
                         }
                     }
                 }
-
             });
 
             After += ctx =>
