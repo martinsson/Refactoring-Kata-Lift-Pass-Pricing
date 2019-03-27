@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Prices {
 
@@ -39,6 +40,8 @@ public class Prices {
         });
 
         get("/prices", (req, res) -> {
+            final Integer age = req.queryParams("age") != null ? Integer.valueOf(req.queryParams("age")) : null;
+
             try (PreparedStatement costStmt = connection.prepareStatement( //
                     "SELECT cost FROM base_price " + //
                     "WHERE type = ?")) {
@@ -49,11 +52,11 @@ public class Prices {
                     int reduction;
                     boolean isHoliday = false;
 
-                    if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) < 6) {
+                    if (age != null && age < 6) {
                         return "{ \"cost\": 0}";
                     } else {
                         reduction = 0;
-                        
+
                         if (!req.queryParams("type").equals("night")) {
                             DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -62,11 +65,11 @@ public class Prices {
                                 try (ResultSet holidays = holidayStmt.executeQuery()) {
 
                                     while (holidays.next()) {
-                                        java.sql.Date holiday = holidays.getDate("holiday");
+                                        Date holiday = holidays.getDate("holiday");
                                         if (req.queryParams("date") != null) {
-                                            java.util.Date d = isoFormat.parse(req.queryParams("date"));
-                                            if (d.getYear() == holiday.getYear() &&
-                                                d.getMonth() == holiday.getMonth() &&
+                                            Date d = isoFormat.parse(req.queryParams("date"));
+                                            if (d.getYear() == holiday.getYear() && //
+                                                d.getMonth() == holiday.getMonth() && //
                                                 d.getDate() == holiday.getDate()) {
                                                 isHoliday = true;
                                             }
@@ -85,14 +88,14 @@ public class Prices {
                             }
 
                             // TODO apply reduction for others
-                            if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) < 15) {
+                            if (age != null && age < 15) {
                                 return "{ \"cost\": " + (int) Math.ceil(result.getInt("cost") * .7) + "}";
                             } else {
-                                if (req.queryParams("age") == null) {
+                                if (age == null) {
                                     double cost = result.getInt("cost") * (1 - reduction / 100.0);
                                     return "{ \"cost\": " + (int) Math.ceil(cost) + "}";
                                 } else {
-                                    if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) > 64) {
+                                    if (age > 64) {
                                         double cost = result.getInt("cost") * .75 * (1 - reduction / 100.0);
                                         return "{ \"cost\": " + (int) Math.ceil(cost) + "}";
                                     } else {
@@ -102,8 +105,8 @@ public class Prices {
                                 }
                             }
                         } else {
-                            if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) >= 6) {
-                                if (req.queryParams("age") != null && Integer.parseInt(req.queryParams("age")) > 64) {
+                            if (age != null && age >= 6) {
+                                if (age > 64) {
                                     return "{ \"cost\": " + (int) Math.ceil(result.getInt("cost") * .4) + "}";
                                 } else {
                                     return "{ \"cost\": " + result.getInt("cost") + "}";
