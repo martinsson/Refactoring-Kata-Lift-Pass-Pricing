@@ -35,7 +35,7 @@ async function createApp() {
                 ))[0]
 
                 for (let row of holidays) {
-                    let holiday: Date = row.holiday
+                    let holiday = row.holiday
                     if (req.query.date) {
                         let d = new Date(req.query.date)
                         if (d.getFullYear() === holiday.getFullYear()
@@ -86,4 +86,3 @@ async function createApp() {
 }
 
 export {createApp}
-
