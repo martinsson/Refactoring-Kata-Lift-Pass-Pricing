@@ -102,9 +102,37 @@ public class PricesTest {
     private RequestSpecification given() {
         return RestAssured.given().
             accept("application/json").
-            port(4567); // Java 
-            //port(5010); // Typescript
-            //port(5000); // C#
+            // port(4567);
+            port(port());
+    }
+    
+    /**
+     * Determine port dynamic to test other languages.
+     */
+    private int port() {
+        String port = System.getProperty("port");
+        if (port != null && port.matches("\\d+")) {
+            return Integer.parseInt(port);
+        }
+
+        String language = System.getProperty("language");
+        language = language != null ? language.toLowerCase() : "java";
+        switch (language) {
+            case "ts":
+            case "typescript":
+            case "express":
+                return 5010;
+            case "java":
+            case "spark":
+                return 4567;
+            case "cs":
+            case "c#":
+            case "csharp":
+            case "nancy":
+                return 5000;
+            default:
+                throw new IllegalArgumentException("Unknown language \"" + language + "\""); 
+        }
     }
     
     private JsonPath obtainPrice(String paramName, Object paramValue, Object... otherParamPairs) {
