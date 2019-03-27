@@ -8,7 +8,7 @@ To install dependencies:
 
     dotnet restore
 
-The project uses [xUnit](https://xunit.github.io/).
+The project uses [xUnit](https://xunit.github.io/) and [Nancy.Testing](https://github.com/NancyFx/Nancy/wiki/Testing-your-application) for testing.
 
 To run the tests:
 
