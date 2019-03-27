@@ -1,5 +1,5 @@
 import express from "express";
-import {createDatabaseConnection} from "./mysql"
+import mysql from "mysql2/promise"
 
 async function createApp() {
     const app = express()
