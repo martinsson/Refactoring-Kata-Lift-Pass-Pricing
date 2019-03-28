@@ -15,7 +15,7 @@ async function createApp() {
             'ON DUPLICATE KEY UPDATE cost = ?',
             [liftPassType, liftPassCost, liftPassCost]);
 
-        res.send()
+        res.json()
     })
     app.get('/prices', async (req, res) => {
         const result = (await connection.query(
@@ -26,7 +26,7 @@ async function createApp() {
         let reduction;
         let isHoliday;
         if (req.query.age < 6) {
-            res.send({cost: 0})
+            res.json({cost: 0})
         } else {
             reduction = 0;
             if (req.query.type !== 'night') {
@@ -35,7 +35,7 @@ async function createApp() {
                 ))[0]
 
                 for (let row of holidays) {
-                    let holiday: Date = row.holiday
+                    let holiday = row.holiday
                     if (req.query.date) {
                         let d = new Date(req.query.date)
                         if (d.getFullYear() === holiday.getFullYear()
@@ -54,30 +54,30 @@ async function createApp() {
 
                 // TODO apply reduction for others
                 if (req.query.age < 15) {
-                    res.send({cost: Math.ceil(result.cost * .7)})
+                    res.json({cost: Math.ceil(result.cost * .7)})
                 } else {
                     if (req.query.age === undefined) {
                         let cost = result.cost * (1 - reduction / 100)
-                        res.send({cost: Math.ceil(cost)})
+                        res.json({cost: Math.ceil(cost)})
                     } else {
                         if (req.query.age > 64) {
                             let cost = result.cost * .75 * (1 - reduction / 100)
-                            res.send({cost: Math.ceil(cost)})
+                            res.json({cost: Math.ceil(cost)})
                         } else {
                             let cost = result.cost * (1 - reduction / 100)
-                            res.send({cost: Math.ceil(cost)})
+                            res.json({cost: Math.ceil(cost)})
                         }
                     }
                 }
             } else {
                 if (req.query.age >= 6) {
                     if (req.query.age > 64) {
-                        res.send({cost: Math.ceil(result.cost * .4)})
+                        res.json({cost: Math.ceil(result.cost * .4)})
                     } else {
-                        res.send(result)
+                        res.json(result)
                     }
                 } else {
-                    res.send({cost: 0})
+                    res.json({cost: 0})
                 }
             }
         }
@@ -86,4 +86,3 @@ async function createApp() {
 }
 
 export {createApp}
-
