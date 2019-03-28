@@ -8,7 +8,7 @@ To install dependencies:
 
     npm install
 
-The project uses [Mocha](https://mochajs.org/) and [Chai](https://www.chaijs.com/).
+The project uses [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [SuperTest](https://github.com/visionmedia/supertest) for testing.
 
 To run the tests:
 
