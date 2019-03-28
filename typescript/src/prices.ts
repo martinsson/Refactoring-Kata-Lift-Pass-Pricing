@@ -1,27 +1,29 @@
 import express from "express";
-import mysql from "mysql2/promise"
+import sqlite from "sqlite";
+import * as fs from "fs";
 
 async function createApp() {
     const app = express()
 
-    let connectionOptions = {host: 'localhost', user: 'root', database: 'lift_pass', password: 'mysql'}
-    const connection = await mysql.createConnection(connectionOptions)
+    const connection = await sqlite.open("database.db")
+    const sql = fs.readFileSync('../database/initDatabase.sql').toString();
+    await connection.exec(sql)
 
     app.put('/prices', async (req, res) => {
         const liftPassCost = req.query.cost
         const liftPassType = req.query.type
-        const [rows, fields] = await connection.query(
-            'INSERT INTO `base_price` (type, cost) VALUES (?, ?) ' +
-            'ON DUPLICATE KEY UPDATE cost = ?',
-            [liftPassType, liftPassCost, liftPassCost]);
+        await connection.all(
+            'INSERT OR REPLACE INTO `base_price` (type, cost) VALUES (?, ?)',
+            [liftPassType, liftPassCost]
+        );
 
         res.json()
     })
     app.get('/prices', async (req, res) => {
-        const result = (await connection.query(
+        const result = (await connection.get(
             'SELECT cost FROM `base_price` ' +
             'WHERE `type` = ? ',
-            [req.query.type]))[0][0]
+            [req.query.type]))
 
         let reduction;
         let isHoliday;
@@ -30,12 +32,12 @@ async function createApp() {
         } else {
             reduction = 0;
             if (req.query.type !== 'night') {
-                const holidays = (await connection.query(
+                const holidays = (await connection.all(
                     'SELECT * FROM `holidays`'
-                ))[0]
+                ))
 
                 for (let row of holidays) {
-                    let holiday = row.holiday
+                    let holiday = new Date(row.holiday)
                     if (req.query.date) {
                         let d = new Date(req.query.date)
                         if (d.getFullYear() === holiday.getFullYear()
