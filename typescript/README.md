@@ -10,6 +10,10 @@ To install dependencies:
 
 The project uses [Mocha](https://mochajs.org/) and [Chai](https://www.chaijs.com/).
 
+To init the database:
+
+    npm run init-database
+
 To run the tests:
 
     npm test
