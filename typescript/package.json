@@ -6,7 +6,8 @@
   "scripts": {
     "start": "tsc && node .",
     "test": "node_modules/.bin/mocha --require ts-node/register --recursive test/**/*.spec.ts",
-    "compile": "tsc"
+    "compile": "tsc",
+    "init-database": "tsc && node database.js"
   },
   "readme": "README.md",
   "license": "ISC",
