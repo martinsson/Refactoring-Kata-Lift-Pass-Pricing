@@ -10,6 +10,10 @@ To install dependencies:
 
 The project uses [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [SuperTest](https://github.com/visionmedia/supertest) for testing.
 
+To init the database:
+
+    npm run init-database
+
 To run the tests:
 
     npm test
