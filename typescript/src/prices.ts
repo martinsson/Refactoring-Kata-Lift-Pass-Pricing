@@ -1,13 +1,10 @@
 import express from "express";
 import sqlite from "sqlite";
-import * as fs from "fs";
 
 async function createApp() {
     const app = express()
 
     const connection = await sqlite.open("database.db")
-    const sql = fs.readFileSync('../database/initDatabase.sql').toString();
-    await connection.exec(sql)
 
     app.put('/prices', async (req, res) => {
         const liftPassCost = req.query.cost
