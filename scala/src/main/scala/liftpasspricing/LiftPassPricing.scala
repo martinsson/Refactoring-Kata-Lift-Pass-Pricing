@@ -6,7 +6,7 @@ import java.time.LocalDate
 import akka.http.scaladsl.model.StatusCodes.OK
 import akka.http.scaladsl.server.{HttpApp, Route}
 
-object LiftPassPricing extends HttpApp with JsonSupport {
+class LiftPassPricing extends HttpApp with JsonSupport {
 
   val undefined: String = Int.MaxValue.toString
 
