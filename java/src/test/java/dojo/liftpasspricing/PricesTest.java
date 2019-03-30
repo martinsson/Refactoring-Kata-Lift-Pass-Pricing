@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -68,12 +69,20 @@ public class PricesTest {
     }
 
     @Test
+    public void realNightCost() {
+        JsonPath json = obtainPrice("type", "night");
+        int cost = json.get("cost");
+        assertEquals(0, cost); 
+    }
+
+    @Test
+    @Disabled
     public void defaultNightCost() {
         JsonPath json = obtainPrice("type", "night");
         int cost = json.get("cost");
-        assertEquals(0, cost); // TODO should be 19
+        assertEquals(19, cost); 
     }
-
+    
     @ParameterizedTest
     @CsvSource({ "5, 0", //
                  "6, 19", //
@@ -130,6 +139,9 @@ public class PricesTest {
             case "csharp":
             case "nancy":
                 return 5000;
+            case "scala":
+            case "akka":
+                return 5010;
             default:
                 throw new IllegalArgumentException("Unknown language \"" + language + "\""); 
         }
