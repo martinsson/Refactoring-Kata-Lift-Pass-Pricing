@@ -4,15 +4,11 @@ Lift Pass Pricing Refactoring Kata.
 
 This is a [Node.js](https://nodejs.org/en/) project. Have [npm](https://www.npmjs.com/) in your path, verify using `npm --version`.
 
-To install dependencies:
+To install dependencies (it also initialises a sqllite database):
 
     npm install
 
 The project uses [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [SuperTest](https://github.com/visionmedia/supertest) for testing.
-
-To init the database:
-
-    npm run init-database
 
 To run the tests:
 
