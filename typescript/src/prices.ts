@@ -58,14 +58,14 @@ async function createApp() {
                 } else {
                     if (req.query.age === undefined) {
                         let cost = result.cost * (1 - reduction / 100)
-                            res.json({cost: Math.ceil(cost)})
+                        res.json({cost: Math.ceil(cost)})
                     } else {
                         if (req.query.age > 64) {
                             let cost = result.cost * .75 * (1 - reduction / 100)
-                                res.json({cost: Math.ceil(cost)})
+                            res.json({cost: Math.ceil(cost)})
                         } else {
                             let cost = result.cost * (1 - reduction / 100)
-                                res.json({cost: Math.ceil(cost)})
+                            res.json({cost: Math.ceil(cost)})
                         }
                     }
                 }
