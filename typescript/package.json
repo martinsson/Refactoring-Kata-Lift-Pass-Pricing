@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node .",
+    "postinstall": "node database.js",
     "test": "node_modules/.bin/mocha --require ts-node/register --recursive test/**/*.spec.ts",
     "compile": "tsc",
-    "init-database": "tsc && node database.js"
+    "init-database": "node database.js"
   },
   "readme": "README.md",
   "license": "ISC",
