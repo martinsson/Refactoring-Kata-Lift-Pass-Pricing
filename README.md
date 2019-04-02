@@ -27,6 +27,7 @@ There are a few steps, you could do any of them.
 1. Implement the new feature using unit tests and 1 or 2 high level tests.
 
 ## Installation
+(no need for this in typescript as it uses sqllite)
 
 Set up a MySQL database on localhost 3306 with user `root` and password `mysql`.
 If you have Docker installed the easiest thing is to use this script, that will initialize a [MariaDB](https://mariadb.org/).

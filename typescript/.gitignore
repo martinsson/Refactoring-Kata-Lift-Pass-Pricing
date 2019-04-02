@@ -4,6 +4,7 @@ typings
 .idea
 *.js
 *.js.map
+database.db
 
 dist/
 coverage/
