@@ -3,8 +3,12 @@ package liftpasspricing
 import java.sql.{Connection, DriverManager}
 import java.time.LocalDate
 
-import akka.http.scaladsl.model.StatusCodes.OK
+import akka.http.scaladsl.model.ContentTypes.`application/json`
+import akka.http.scaladsl.model.HttpEntity
 import akka.http.scaladsl.server.{HttpApp, Route}
+
+import scala.Array.emptyByteArray
+import scala.util.Try
 
 class LiftPassPricing extends HttpApp with JsonSupport {
 
@@ -24,13 +28,8 @@ class LiftPassPricing extends HttpApp with JsonSupport {
         statement.setString(3, liftPassCost)
         statement.executeUpdate()
 
-        complete(OK)
-      } ~ (get & parameterMap) { parameters =>
-        val req = parameters.withDefault {
-          case "age" => undefined
-          case "date" => "1981-12-24"
-          case _ => ""
-        }
+        complete(HttpEntity(`application/json`, emptyByteArray))
+      } ~ (get & parameterMap) { req =>
         val costStatement = connection.prepareStatement(
           "SELECT cost FROM `base_price` " +
             "WHERE `type` = ?")
@@ -40,7 +39,7 @@ class LiftPassPricing extends HttpApp with JsonSupport {
 
         var reduction: Int = 0
         var isHoliday: Boolean = false
-        if (req("age").toInt < 6) {
+        if (Try(req("age").toInt < 6).getOrElse(false)) {
           complete(Cost(0))
         } else {
           reduction = 0
@@ -62,19 +61,19 @@ class LiftPassPricing extends HttpApp with JsonSupport {
               }
             }
 
-            if (!isHoliday && LocalDate.parse(req("date")).getDayOfWeek.getValue == 1) {
+            if (!isHoliday && Try(LocalDate.parse(req("date")).getDayOfWeek.getValue == 1).getOrElse(false)) {
               reduction = 35
             }
 
             // TODO apply reduction for others
-            if (req("age").toInt < 15) {
+            if (Try(req("age").toInt < 15).getOrElse(false)) {
               complete(Cost(math.ceil(result.getInt("cost") * .7).toInt))
             } else {
-              if (req("age") == undefined) {
+              if (!req.contains("age")) {
                 val cost = result.getInt("cost") * (1 - reduction / 100d)
                 complete(Cost(math.ceil(cost).toInt))
               } else {
-                if (req("age").toInt > 64) {
+                if (Try(req("age").toInt > 64).getOrElse(false)) {
                   val cost = result.getInt("cost") * .75 * (1 - reduction / 100d)
                   complete(Cost(math.ceil(cost).toInt))
                 } else {
@@ -84,8 +83,8 @@ class LiftPassPricing extends HttpApp with JsonSupport {
               }
             }
           } else {
-            if (req("age").toInt >= 6) {
-              if (req("age").toInt > 64) {
+            if (Try(req("age").toInt >= 6).getOrElse(false)) {
+              if (Try(req("age").toInt > 64).getOrElse(false)) {
                 complete(Cost(math.ceil(result.getInt("cost") * .4).toInt))
               } else {
                 complete(Cost(result.getInt("cost")))
