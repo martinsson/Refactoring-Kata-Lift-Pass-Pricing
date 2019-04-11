@@ -38,7 +38,6 @@ Inject the data with
     mysql -u root -p mysql < ./database/initDatabase.sql
 
 Then head on to the language of your choice and follow the Readme in there.
-Some of the languages have a failing test that you could finish writing.
 
 ## Tips
 
