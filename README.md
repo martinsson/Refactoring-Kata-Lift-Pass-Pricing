@@ -58,3 +58,11 @@ The typical workflow would be
 1. Move the bulk of the high level tests down onto PricingLogic using a fake dao, write some focused integration tests for the PricingDao using a real DB, there should be only a handful.
 
 Now the HTTP layer and the integration of the parts can be tested with very few (one or two) high-level tests.
+
+## Videos
+Try it first ;)
+
+https://www.youtube.com/watch?v=A06nvXyJBbk
+
+https://www.youtube.com/watch?v=vcUCU_WB2uY
+
