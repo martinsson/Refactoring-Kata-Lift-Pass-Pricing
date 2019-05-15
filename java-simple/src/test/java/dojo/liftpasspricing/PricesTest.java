@@ -75,14 +75,6 @@ public class PricesTest {
         assertEquals(0, cost); 
     }
 
-    @Test
-    @Disabled
-    public void defaultNightCost() {
-        JsonPath json = obtainPrice("type", "night");
-        int cost = json.get("cost");
-        assertEquals(19, cost); 
-    }
-    
     @ParameterizedTest
     @CsvSource({ "5, 0", //
                  "6, 19", //
@@ -111,42 +103,9 @@ public class PricesTest {
     private RequestSpecification given() {
         return RestAssured.given().
             accept("application/json").
-            // port(4567);
-            port(port());
+            port(4567);
     }
-    
-    /**
-     * Determine port dynamic to test other languages.
-     */
-    private int port() {
-        String port = System.getProperty("port");
-        if (port != null && port.matches("\\d+")) {
-            return Integer.parseInt(port);
-        }
 
-        String language = System.getProperty("language");
-        language = language != null ? language.toLowerCase() : "java";
-        switch (language) {
-            case "ts":
-            case "typescript":
-            case "express":
-                return 5010;
-            case "java":
-            case "spark":
-                return 4567;
-            case "cs":
-            case "c#":
-            case "csharp":
-            case "nancy":
-                return 5000;
-            case "scala":
-            case "akka":
-                return 5010;
-            default:
-                throw new IllegalArgumentException("Unknown language \"" + language + "\""); 
-        }
-    }
-    
     private JsonPath obtainPrice(String paramName, Object paramValue, Object... otherParamPairs) {
         return given().
         when().
