@@ -56,13 +56,10 @@ public class Prices {
             }
 
 
-            int reduction;
-            boolean isHoliday = false;
 
             if (age != null && age < 6) {
                 return "{ \"cost\": 0}";
             } else {
-                reduction = 0;
 
                 if (!req.queryParams("type").equals("night")) {
                     DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -78,6 +75,9 @@ public class Prices {
                             }
                         }
                     }
+
+                    int reduction = 0;
+                    boolean isHoliday = false;
                     for (Date holiday : holidaysDates) {
                         if (req.queryParams("date") != null) {
                             Date d = isoFormat.parse(req.queryParams("date"));
