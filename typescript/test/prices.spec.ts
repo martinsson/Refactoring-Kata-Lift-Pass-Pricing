@@ -17,10 +17,10 @@ describe('prices', () => {
     it('does something', async () => {
 
         const response = await request(app)
-            .get('/prices') // construct some proper url parameters
+            .get('/prices?type=1jour')
 
-        var putSomehtingHere = {}
-        expect(response.body).deep.equal(putSomehtingHere)
+        var exptectedResult = {cost: 35} // change this to make the test pass
+        expect(response.body).deep.equal(exptectedResult)
     });
 
 });
