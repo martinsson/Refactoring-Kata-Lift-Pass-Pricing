@@ -18,12 +18,12 @@ class LiftPassPricingSpec extends AnyFlatSpec with ScalatestRouteTest with JsonS
     }
   }
 
-  "Lift pass pricing api" should "does something" in withLiftPassPricing { app =>
+  it should "does something" in withLiftPassPricing { app =>
 
-    Get("/prices") ~> app ~> check { // construct some proper url parameters
+    Get("/prices?type=1jour") ~> app ~> check {
 
-      val putSomethingHere = Cost(0)
-      responseAs[Cost] shouldBe putSomethingHere
+      val exptectedResult = Cost(35) // change this to make the test pass
+      responseAs[Cost] shouldBe exptectedResult
     }
   }
 
