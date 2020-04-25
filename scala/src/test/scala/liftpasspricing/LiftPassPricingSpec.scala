@@ -2,12 +2,12 @@ package liftpasspricing
 
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import org.scalatest.FlatSpec
-import org.scalatest.Matchers._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers._
 
 import scala.util.Try
 
-class LiftPassPricingSpec extends FlatSpec with ScalatestRouteTest with JsonSupport {
+class LiftPassPricingSpec extends AnyFlatSpec with ScalatestRouteTest with JsonSupport {
 
   def withLiftPassPricing(testCode: Route => Any): Unit = {
     val liftPassPrincing = new LiftPassPricing()

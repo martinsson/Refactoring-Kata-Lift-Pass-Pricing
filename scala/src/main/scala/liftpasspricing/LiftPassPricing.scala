@@ -19,7 +19,7 @@ class LiftPassPricing extends HttpApp with JsonSupport {
 
   override def routes: Route =
     path("prices") {
-      (put & parameters('cost, 'type)) { (liftPassCost, liftPassType) =>
+      (put & parameters(Symbol("cost"), Symbol("type"))) { (liftPassCost, liftPassType) =>
         val statement = connection.prepareStatement(
           "INSERT INTO `base_price` (type, cost) VALUES (?, ?) " +
             "ON DUPLICATE KEY UPDATE cost = ?")
