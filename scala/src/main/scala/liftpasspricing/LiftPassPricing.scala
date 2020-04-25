@@ -37,17 +37,16 @@ class LiftPassPricing extends HttpApp with JsonSupport {
         val result = costStatement.executeQuery()
         result.next()
 
-        var reduction: Int = 0
-        var isHoliday: Boolean = false
         if (Try(req("age").toInt < 6).getOrElse(false)) {
           complete(Cost(0))
         } else {
-          reduction = 0
           if (req("type") != "night") {
             val holidays = connection.createStatement().executeQuery(
               "SELECT * FROM `holidays`"
             )
 
+            var isHoliday: Boolean = false
+            var reduction: Int = 0
             while (holidays.next) {
               val holiday: LocalDate = holidays.getDate(1).toLocalDate
               if (req.contains("date")) {
