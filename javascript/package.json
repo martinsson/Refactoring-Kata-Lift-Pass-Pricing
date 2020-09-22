@@ -1,0 +1,19 @@
+{
+  "name": "lift-pass-pricing",
+  "version": "1.0.0",
+  "description": "Lift-Pass-Pricing refactoring kata",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "test": "jest"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql2": "^2.2.2"
+  },
+  "devDependencies": {
+    "jest": "^26.4.2",
+    "supertest": "^4.0.2"
+  }
+}
