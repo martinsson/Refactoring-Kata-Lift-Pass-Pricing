@@ -28,6 +28,13 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('Java/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
           
+      - name: Verify and import DB
+        run: |
+          while ! mysqladmin ping -h"127.0.0.1" -P"3306" --silent; do
+            sleep 1
+          done         
+          mysqladmin -h"127.0.0.1" -P"3306" -p version
+      
       - name: Build and test
         working-directory: ./java
         run: |
