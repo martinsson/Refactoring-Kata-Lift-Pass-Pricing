@@ -3,7 +3,13 @@
 name: learn-github-actions
 
 # Controls when the action will run. 
-on: [push]
+on:
+  push:
+    branches:
+      - with_tests
+    paths:
+      - 'java/**'
+      - '**/java-build.yml'
 
 jobs:
   # This workflow contains a single job called "build"
