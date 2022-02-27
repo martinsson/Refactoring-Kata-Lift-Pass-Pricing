@@ -1,0 +1,53 @@
+# This is a basic workflow to help you get started with Actions
+
+name: learn-github-actions
+
+# Controls when the action will run. 
+on:
+  push:
+    branches:
+      - with_tests
+    paths:
+      - 'java/**'
+      - '**/java-build.yml'
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+          
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('Java/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+          
+      - name: Verify and import DB
+        run: |
+          while ! mysqladmin ping -h"127.0.0.1" -P"3306" --silent; do
+            sleep 1
+          done         
+          mysqladmin -h"127.0.0.1" -P"3306" -p version
+      
+      - name: Build and test
+        working-directory: ./java
+        run: |
+          mvn -B clean package
+          
+      - name: Publish Unit Tests
+        uses: EnricoMi/publish-unit-test-result-action@v1.17
+        if: always()
+        with:
+          files: ./Java/target/**/*.xml
