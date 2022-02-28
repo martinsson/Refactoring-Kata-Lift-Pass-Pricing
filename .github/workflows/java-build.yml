@@ -1,6 +1,6 @@
-# This is a basic workflow to help you get started with Actions
+# Workflow to build and test the java version
 
-name: learn-github-actions
+name: java-build
 
 # Controls when the action will run. 
 on:
@@ -11,15 +11,30 @@ on:
       - 'java/**'
       - '**/java-build.yml'
 
+defaults:
+  run:
+    working-directory: ./java
+    
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    env:
+      DB_USER: root
+      DB_OLD_PASSWORD: root
+      DB_PASSWORD: mysql
+      
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+
+      - name: Start MYSQL and import DB
+        run: |
+          sudo systemctl start mysql
+          mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
+          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
 
       - name: Set up Java
         uses: actions/setup-java@v2
@@ -31,23 +46,15 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('Java/pom.xml') }}
+          key: ${{ runner.os }}-m2-${{ hashFiles('./pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
           
-      - name: Verify and import DB
-        run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"3306" --silent; do
-            sleep 1
-          done         
-          mysqladmin -h"127.0.0.1" -P"3306" -p version
-      
       - name: Build and test
-        working-directory: ./java
         run: |
-          mvn -B clean package
+          mvn -B clean install 
           
       - name: Publish Unit Tests
         uses: EnricoMi/publish-unit-test-result-action@v1.17
         if: always()
         with:
-          files: ./Java/target/**/*.xml
+          files: ./target/**/*.xml
