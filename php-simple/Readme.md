@@ -1,3 +1,8 @@
+# Install
+Run
+
+    composer install
+
 # Setup database
 The simplest solution is to use a docker container with mysql. You just need docker
 then you can run the file `./runLocalDatabase.sh` which will download the image, start it and inject the data in `database/initDatabase.sql`.
