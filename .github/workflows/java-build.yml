@@ -52,6 +52,7 @@ jobs:
       - name: Build and test
         run: |
           mvn -B clean install 
+          ls -la .
           
       - name: Publish Unit Tests
         uses: EnricoMi/publish-unit-test-result-action@v1.17
