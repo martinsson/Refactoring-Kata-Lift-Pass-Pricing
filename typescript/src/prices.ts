@@ -23,17 +23,16 @@ async function createApp() {
             'WHERE `type` = ? ',
             [req.query.type]))[0][0]
 
-        let reduction;
-        let isHoliday;
         if (req.query.age < 6) {
             res.json({cost: 0})
         } else {
-            reduction = 0;
             if (req.query.type !== 'night') {
                 const holidays = (await connection.query(
                     'SELECT * FROM `holidays`'
                 ))[0]
 
+                let isHoliday;
+                let reduction = 0
                 for (let row of holidays) {
                     let holiday = row.holiday
                     if (req.query.date) {
