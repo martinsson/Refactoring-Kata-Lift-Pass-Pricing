@@ -1,6 +1,6 @@
 # Setup database
 The simplest solution is to use a docker container with mysql. You just need docker
-then you can run the file `./runLocalDatabase.sh` wich will download the image, start it and inject the data in `database/initDatabase.sql`.
+then you can run the file `./runLocalDatabase.sh` which will download the image, start it and inject the data in `database/initDatabase.sql`.
 Beware to launch it in this directory.
 
 # Run application
