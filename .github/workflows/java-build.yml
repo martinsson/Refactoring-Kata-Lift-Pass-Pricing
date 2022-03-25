@@ -10,6 +10,13 @@ on:
     paths:
       - 'java/**'
       - '**/java-build.yml'
+      
+  pull_request:
+    branches:
+      - with_tests
+    paths:
+      - 'CSharp/**'
+      - '**/java-build.yml'
 
 defaults:
   run:
