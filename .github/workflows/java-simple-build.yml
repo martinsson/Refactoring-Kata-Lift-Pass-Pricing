@@ -2,6 +2,9 @@
 
 name: java-simple-build
 
+env:
+  PROJECT_DIR: java-simple
+  
 # Controls when the action will run. 
 on:
   push:
@@ -18,13 +21,13 @@ on:
       - 'java/**'
       - '**/java-simple-build.yml'
 
-defaults:
-  run:
-    working-directory: ./java-simple
-    
 jobs:
   # This workflow contains a single job called "build"
   build:
+    defaults:
+      run:
+        working-directory: ./${{ env.PROJECT_DIR }}
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -64,4 +67,4 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1.17
         if: always()
         with:
-          files: ./java-simple/target/**/*.xml
+          files: ./${{ env.PROJECT_DIR }}/target/**/*.xml
