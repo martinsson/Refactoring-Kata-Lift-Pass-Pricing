@@ -1,0 +1,31 @@
+name: php-simple-build
+
+on:
+  push:
+    paths:
+      - 'php-simple/**'
+      - '.github/workflows/php-simple.yml'
+  pull_request:
+    paths:
+      - 'php-simple/**'
+      - '.github/workflows/php-simple.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.3
+
+    - name: Set up dependencies
+      working-directory: php-simple
+      run: composer install
+
+    - name: Test
+      working-directory: php-simple
+      run: ./vendor/bin/phpunit
