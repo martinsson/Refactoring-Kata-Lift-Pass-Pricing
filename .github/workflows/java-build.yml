@@ -20,14 +20,14 @@ on:
     paths:
       - 'java/**'
       - '**/java-build.yml'
-
-defaults:
-  run:
-    working-directory: ./${{ env.PROJECT_DIR }}
     
 jobs:
   # This workflow contains a single job called "build"
   build:
+    defaults:
+      run:
+        working-directory: ./${{ env.PROJECT_DIR }}
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
