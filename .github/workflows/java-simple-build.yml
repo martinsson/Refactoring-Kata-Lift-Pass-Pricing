@@ -11,14 +11,14 @@ on:
     branches:
       - with_tests
     paths:
-      - 'java/**'
+      - 'java-simple/**'
       - '**/java-simple-build.yml'
       
   pull_request:
     branches:
       - with_tests
     paths:
-      - 'java/**'
+      - 'java-simple/**'
       - '**/java-simple-build.yml'
 
 jobs:
