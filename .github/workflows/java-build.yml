@@ -15,7 +15,7 @@ on:
     branches:
       - with_tests
     paths:
-      - 'CSharp/**'
+      - 'java/**'
       - '**/java-build.yml'
 
 defaults:
