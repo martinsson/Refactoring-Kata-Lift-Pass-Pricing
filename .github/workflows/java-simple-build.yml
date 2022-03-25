@@ -1,9 +1,9 @@
-# Workflow to build and test the java version
+# Workflow to build and test the java-simple version
 
-name: java-build
+name: java-simple-build
 
 env:
-  PROJECT_DIR: java
+  PROJECT_DIR: java-simple
   
 # Controls when the action will run. 
 on:
@@ -11,16 +11,16 @@ on:
     branches:
       - with_tests
     paths:
-      - 'java/**'
-      - '**/java-build.yml'
+      - 'java-simple/**'
+      - '**/java-simple-build.yml'
       
   pull_request:
     branches:
       - with_tests
     paths:
-      - 'java/**'
-      - '**/java-build.yml'
-    
+      - 'java-simple/**'
+      - '**/java-simple-build.yml'
+
 jobs:
   # This workflow contains a single job called "build"
   build:
