@@ -2,6 +2,9 @@
 
 name: java-build
 
+env:
+  PROJECT_DIR: java
+  
 # Controls when the action will run. 
 on:
   push:
@@ -20,7 +23,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./java
+    working-directory: ./${{ env.PROJECT_DIR }}
     
 jobs:
   # This workflow contains a single job called "build"
@@ -64,4 +67,4 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1.17
         if: always()
         with:
-          files: ./java//target/**/*.xml
+          files: ./${{ env.PROJECT_DIR }}/target/**/*.xml
