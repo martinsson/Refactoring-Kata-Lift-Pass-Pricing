@@ -12,9 +12,6 @@ on:
 
 jobs:
   build:
-    defaults:
-      run:
-        working-directory: ./scala  
     runs-on: ubuntu-latest
     steps:
     - name: Check out the repo
@@ -26,5 +23,5 @@ jobs:
         java-version: 1.8
 
     - name: Build and test
-      working-directory: Scala
+      working-directory: scala
       run: sbt clean test
