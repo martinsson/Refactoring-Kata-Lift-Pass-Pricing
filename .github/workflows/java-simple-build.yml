@@ -1,0 +1,67 @@
+# Workflow to build and test the java-simple version
+
+name: java-simple-build
+
+# Controls when the action will run. 
+on:
+  push:
+    branches:
+      - with_tests
+    paths:
+      - 'java/**'
+      - '**/java-simple-build.yml'
+      
+  pull_request:
+    branches:
+      - with_tests
+    paths:
+      - 'java/**'
+      - '**/java-simple-build.yml'
+
+defaults:
+  run:
+    working-directory: ./java-simple
+    
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    env:
+      DB_USER: root
+      DB_OLD_PASSWORD: root
+      DB_PASSWORD: mysql
+      
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Start MYSQL and import DB
+        run: |
+          sudo systemctl start mysql
+          mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
+          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+          
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('./pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+          
+      - name: Build and test
+        run: |
+          mvn -B clean install
+          
+      - name: Publish Unit Tests
+        uses: EnricoMi/publish-unit-test-result-action@v1.17
+        if: always()
+        with:
+          files: ./java-simple/target/**/*.xml
