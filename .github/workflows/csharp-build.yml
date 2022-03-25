@@ -9,7 +9,13 @@ on:
     paths:
       - 'csharp/**'
       - '**/csharp-build.yml'
-      
+  pull_request:
+    branches:
+      - with_tests
+    paths:
+      - 'csharp/**'
+      - '**/csharp-build.yml'
+
 defaults:
   run:
     working-directory: ./csharp
