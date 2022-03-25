@@ -13,9 +13,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DB_USER: root
+      DB_OLD_PASSWORD: root
+      DB_PASSWORD: mysql
+      
     steps:
     - name: Check out the repo
       uses: actions/checkout@v2
+      
+    - name: Start MYSQL and import DB
+      run: |
+        sudo systemctl start mysql
+        mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
+        mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
 
     - name: Set up Java
       uses: actions/setup-java@v1
