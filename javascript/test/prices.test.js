@@ -39,7 +39,7 @@ describe('prices', () => {
                 expect(body.cost).toEqual(expectedCost)
             });
         });
-    
+
     it('default night cost', async () => {
         const {body} = await request(app)
             .get('/prices?type=night')
@@ -78,5 +78,5 @@ describe('prices', () => {
             });
         })
 
-    // TODO 2-4, and 5, 6 day pass 
+
 })
