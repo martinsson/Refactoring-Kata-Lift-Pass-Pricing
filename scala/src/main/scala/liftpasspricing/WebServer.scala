@@ -19,7 +19,10 @@ object WebServer {
         system.log.info(
           """LiftPassPricing Api started on {},
             |you can open http://{}:{}/prices?type=night&age=23&date=2019-02-18 in a navigator
-            |and you'll get the price of the list pass for the day.""".stripMargin, address.getPort, address.getHostString, address.getPort
+            |and you'll get the price of the list pass for the day.""".stripMargin,
+          address.getPort,
+          address.getHostString,
+          address.getPort
         )
       case Failure(ex) =>
         system.log.error("Failed to bind HTTP endpoint, terminating system", ex)

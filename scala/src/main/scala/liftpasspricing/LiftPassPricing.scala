@@ -22,7 +22,8 @@ class LiftPassPricing {
       (put & parameters(Symbol("cost"), Symbol("type"))) { (liftPassCost, liftPassType) =>
         val statement = connection.prepareStatement(
           "INSERT INTO `base_price` (type, cost) VALUES (?, ?) " +
-            "ON DUPLICATE KEY UPDATE cost = ?")
+            "ON DUPLICATE KEY UPDATE cost = ?"
+        )
         statement.setString(1, liftPassType)
         statement.setString(2, liftPassCost)
         statement.setString(3, liftPassCost)
@@ -32,7 +33,8 @@ class LiftPassPricing {
       } ~ (get & parameterMap) { req =>
         val costStatement = connection.prepareStatement(
           "SELECT cost FROM `base_price` " +
-            "WHERE `type` = ?")
+            "WHERE `type` = ?"
+        )
         costStatement.setString(1, req("type"))
         val result = costStatement.executeQuery()
         result.next()
@@ -41,9 +43,11 @@ class LiftPassPricing {
           complete(Cost(0))
         } else {
           if (req("type") != "night") {
-            val holidays = connection.createStatement().executeQuery(
-              "SELECT * FROM `holidays`"
-            )
+            val holidays = connection
+              .createStatement()
+              .executeQuery(
+                "SELECT * FROM `holidays`"
+              )
 
             var isHoliday: Boolean = false
             var reduction: Int = 0
@@ -51,9 +55,11 @@ class LiftPassPricing {
               val holiday: LocalDate = holidays.getDate(1).toLocalDate
               if (req.contains("date")) {
                 val d = LocalDate.parse(req("date"))
-                if (d.getYear == holiday.getYear
+                if (
+                  d.getYear == holiday.getYear
                   && d.getMonth == holiday.getMonth
-                  && d.getDayOfMonth == holiday.getDayOfMonth) {
+                  && d.getDayOfMonth == holiday.getDayOfMonth
+                ) {
 
                   isHoliday = true
                 }

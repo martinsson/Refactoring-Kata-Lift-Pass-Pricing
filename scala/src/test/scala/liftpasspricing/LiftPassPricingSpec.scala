@@ -18,7 +18,6 @@ class LiftPassPricingSpec extends AnyFlatSpec with ScalatestRouteTest {
   }
 
   it should "does something" in withLiftPassPricing { app =>
-
     Get("/prices?type=1jour") ~> app ~> check {
 
       val exptectedResult = Cost(35) // change this to make the test pass
