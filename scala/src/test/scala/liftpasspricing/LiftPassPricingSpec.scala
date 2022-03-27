@@ -1,21 +1,20 @@
 package liftpasspricing
 
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.testkit.ScalatestRouteTest
+import liftpasspricing.JsonFormats._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers._
 
-import scala.util.Try
+import scala.Function.const
+import scala.util.Using
 
-class LiftPassPricingSpec extends AnyFlatSpec with ScalatestRouteTest with JsonSupport {
+class LiftPassPricingSpec extends AnyFlatSpec with ScalatestRouteTest {
 
   def withLiftPassPricing(testCode: Route => Any): Unit = {
-    val liftPassPrincing = new LiftPassPricing()
-    try {
-      testCode(liftPassPrincing.routes)
-    } finally {
-      Try(liftPassPrincing.connection.close())
-    }
+    val (routes, connection) = new LiftPassPricing().createApp()
+    Using(connection)(const(testCode(routes)))
   }
 
   it should "does something" in withLiftPassPricing { app =>

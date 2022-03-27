@@ -1,24 +1,24 @@
 package liftpasspricing
 
-import java.sql.{Connection, DriverManager}
-import java.time.LocalDate
-
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.ContentTypes.`application/json`
 import akka.http.scaladsl.model.HttpEntity
-import akka.http.scaladsl.server.{HttpApp, Route}
+import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
+import liftpasspricing.JsonFormats._
 
+import java.sql.{Connection, DriverManager}
+import java.time.LocalDate
 import scala.Array.emptyByteArray
 import scala.util.Try
 
-class LiftPassPricing extends HttpApp with JsonSupport {
+class LiftPassPricing {
 
-  val undefined: String = Int.MaxValue.toString
+  def createApp(): (Route, Connection) = {
+    val (host, user, database, password) = ("localhost", "root", "lift_pass", "mysql")
+    val connection: Connection = DriverManager.getConnection(s"jdbc:mysql://$host/$database", user, password)
 
-  val (host, user, database, password) = ("localhost", "root", "lift_pass", "mysql")
-  val connection: Connection = DriverManager.getConnection(s"jdbc:mysql://$host/$database", user, password)
-
-  override def routes: Route =
-    path("prices") {
+    val routes = path("prices") {
       (put & parameters(Symbol("cost"), Symbol("type"))) { (liftPassCost, liftPassType) =>
         val statement = connection.prepareStatement(
           "INSERT INTO `base_price` (type, cost) VALUES (?, ?) " +
@@ -95,5 +95,8 @@ class LiftPassPricing extends HttpApp with JsonSupport {
         }
       }
     }
+
+    (routes, connection)
+  }
 
 }
