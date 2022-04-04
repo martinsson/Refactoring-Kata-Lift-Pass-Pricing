@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.restassured.RestAssured;
@@ -15,15 +15,15 @@ import spark.Spark;
 
 public class PricesTest {
 
-    private Connection connection;
+private static Connection connection;
 
-    @BeforeEach
-    public void createPrices() throws SQLException {
+    @BeforeAll
+    public static void createPrices() throws SQLException {
         connection = Prices.createApp();
     }
 
-    @AfterEach
-    public void stopApplication() throws SQLException {
+    @AfterAll
+    public static void stopApplication() throws SQLException {
         Spark.stop();
         connection.close();
     }
