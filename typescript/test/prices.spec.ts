@@ -7,7 +7,7 @@ describe('prices', () => {
     let app, connection
 
     beforeEach(async () => {
-        ({connection, app} = await createApp())
+        ({app, connection} = await createApp())
         await request(app).put('/prices?type=1jour&cost=35').expect(200)
         await request(app).put('/prices?type=night&cost=19').expect(200)
     });

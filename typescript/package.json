@@ -8,17 +8,18 @@
     "test": "node_modules/.bin/mocha --require ts-node/register --recursive test/**/*.spec.ts",
     "compile": "tsc"
   },
-  "readme": "README.md",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.16.4",
+    "mysql2": "^1.6.5"
+  },
+  "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/express": "^4.16.1",
     "@types/mocha": "^5.2.6",
     "@types/supertest": "^2.0.7",
     "chai": "^4.2.0",
-    "express": "^4.16.4",
     "mocha": "^6.1.2",
-    "mysql2": "^1.6.5",
     "supertest": "^4.0.2",
     "ts-node": "^8.0.3",
     "typescript": "^3.4.3"
