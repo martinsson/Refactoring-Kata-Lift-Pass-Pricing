@@ -2,7 +2,8 @@ node_modules/
 npm-debug.log
 typings
 .idea
-*.js
+src/*.js
+test/*.js
 *.js.map
 tsconfig.tsbuildinfo
 
