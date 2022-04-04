@@ -23,7 +23,7 @@ async function createApp() {
             'WHERE `type` = ? ',
             [req.query.type]))[0][0]
 
-        if (req.query.age < 6) {
+        if (req.query.age as any < 6) {
             res.json({cost: 0})
         } else {
             if (req.query.type !== 'night') {
@@ -36,7 +36,7 @@ async function createApp() {
                 for (let row of holidays) {
                     let holiday = row.holiday
                     if (req.query.date) {
-                        let d = new Date(req.query.date)
+                        let d = new Date(req.query.date as string)
                         if (d.getFullYear() === holiday.getFullYear()
                             && d.getMonth() === holiday.getMonth()
                             && d.getDate() === holiday.getDate()) {
@@ -47,19 +47,19 @@ async function createApp() {
 
                 }
 
-                if (!isHoliday && new Date(req.query.date).getDay() === 1) {
+                if (!isHoliday && new Date(req.query.date as string).getDay() === 1) {
                     reduction = 35
                 }
 
                 // TODO apply reduction for others
-                if (req.query.age < 15) {
+                if (req.query.age as any < 15) {
                     res.json({cost: Math.ceil(result.cost * .7)})
                 } else {
                     if (req.query.age === undefined) {
                         let cost = result.cost * (1 - reduction / 100)
                         res.json({cost: Math.ceil(cost)})
                     } else {
-                        if (req.query.age > 64) {
+                        if (req.query.age as any > 64) {
                             let cost = result.cost * .75 * (1 - reduction / 100)
                             res.json({cost: Math.ceil(cost)})
                         } else {
@@ -69,8 +69,8 @@ async function createApp() {
                     }
                 }
             } else {
-                if (req.query.age >= 6) {
-                    if (req.query.age > 64) {
+                if (req.query.age as any >= 6) {
+                    if (req.query.age as any > 64) {
                         res.json({cost: Math.ceil(result.cost * .4)})
                     } else {
                         res.json(result)

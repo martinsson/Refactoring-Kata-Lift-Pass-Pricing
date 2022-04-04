@@ -4,7 +4,7 @@
   "description": "Lift-Pass-Pricing refactoring kata",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node .",
+    "start": "node_modules/.bin/ts-node .",
     "test": "node_modules/.bin/mocha --require ts-node/register --recursive test/**/*.spec.ts",
     "compile": "tsc"
   },
