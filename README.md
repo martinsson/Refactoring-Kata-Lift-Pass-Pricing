@@ -59,3 +59,17 @@ The typical workflow would be
 1. Move the bulk of the high level tests down onto PricingLogic using a fake dao, write some focused integration tests for the PricingDao using a real DB, there should be only a handful.
 
 Now the HTTP layer and the integration of the parts can be tested with very few (one or two) high-level tests.
+
+
+## CONTRIBUTING
+
+There are two branches, the master branch and the with_tests branch. The master is always merged into the with_tests branch. 
+So typically if you want to contribute a new language or a *simple* version of a language you typically change the master branch, 
+then switch to the with_tests branch and  merge with  master, then add tests. 
+
+Note that there are github actions for most of the with_tests versions, please do provide one if you add a language. This allows
+anyone having trouble running the tests with a baseline for getting the tests to work
+
+When you're ready please submit one pull request for each branch
+
+Thanks for contributing!
