@@ -6,11 +6,6 @@ from main import app
 client = TestClient(app)
 
 
-def test_read_main():
-    response = client.get("/prices?type=1jour")
-    assert response.json() == {"cost": 35}
-
-
 @pytest.mark.parametrize(
     argnames=("age", "expected_cost"),
     argvalues=[(5, 0),
