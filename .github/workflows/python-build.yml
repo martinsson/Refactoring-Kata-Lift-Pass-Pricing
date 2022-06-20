@@ -1,0 +1,43 @@
+name: python-build
+
+env:
+  PROJECT_DIR: python
+
+on:
+  push:
+    paths:
+      - 'python/**'
+      - '.github/workflows/python-build.yml'
+  pull_request:
+    paths:
+      - 'python/**'
+      - '.github/workflows/python-build.yml'
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ./${{ env.PROJECT_DIR }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install dependency manager (poetry)
+        uses: abatilo/actions-poetry@v2.0.0
+
+      - name: Set up dependencies
+        run: poetry install
+
+      - name: Set up the database
+        run: poetry run python database.py createdb
+
+      - name: Test
+        run: poetry run pytest
