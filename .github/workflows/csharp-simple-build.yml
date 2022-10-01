@@ -1,5 +1,5 @@
 # Workflow to build and test the csharp version
-name: csharp-build
+name: csharp-simple-build
 
 # Controls when the action will run.
 on:
@@ -7,34 +7,28 @@ on:
     branches:
       - with_tests
     paths:
-      - 'csharp/**'
-      - '**/csharp-build.yml'
+      - 'csharp-simple/**'
+      - '**/csharp-simple-build.yml'
   pull_request:
     branches:
       - with_tests
     paths:
-      - 'csharp/**'
-      - '**/csharp-build.yml'
+      - 'csharp-simple/**'
+      - '**/csharp-simple-build.yml'
 
 defaults:
   run:
-    working-directory: ./csharp
+    working-directory: ./csharp-simple
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     env:
       DB_USER: root
       DB_OLD_PASSWORD: root
       DB_PASSWORD: mysql
-
-    permissions:
-      id-token: write
-      contents: read
-      statuses: write
-      checks: write
 
     steps:
       - name: checkout source
@@ -69,7 +63,7 @@ jobs:
         run: dotnet test --logger "trx;logfilename=${GITHUB_WORKSPACE}/unit_test_results.xml"
 
       - name: Test Reporter
-        uses: dorny/test-reporter@v1.5.0
+        uses: dorny/test-reporter@v1.4.3
         if: always()
         with:
           name: publish test results
