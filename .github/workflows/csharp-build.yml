@@ -63,11 +63,11 @@ jobs:
         run: dotnet test --logger "trx;logfilename=${GITHUB_WORKSPACE}/unit_test_results.xml"
 
       - name: Test Reporter
-        uses: dorny/test-reporter@v1.4.3
+        uses: dorny/test-reporter@v1.5.0
         if: always()
         with:
           name: publish test results
 
-          path: "unit_test_results.xml"
+          path: "${GITHUB_WORKSPACE}/unit_test_results.xml"
           reporter: dotnet-trx
           fail-on-error: false
