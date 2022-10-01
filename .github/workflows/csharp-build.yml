@@ -33,6 +33,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      statuses: write
       checks: write
 
     steps:
