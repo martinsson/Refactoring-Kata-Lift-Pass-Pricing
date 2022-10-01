@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.codecop</groupId>
-    <artifactId>lift-pass-pricing</artifactId>
+    <artifactId>lift-pass-pricing-simple</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>Lift-Pass-Pricing refactoring kata</name>
 
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.15</version>
+            <version>8.0.28</version>
             <scope>runtime</scope>
         </dependency>
 

@@ -1,2 +1,14 @@
-lift-pass-pricing.iml
+# Idea
+.idea
+*.iml
+
+# Maven/Gradle
 target
+.gradle
+build
+
+# Eclipse
+.project
+.classpath
+.settings
+.pmd
