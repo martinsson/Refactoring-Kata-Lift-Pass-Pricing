@@ -24,12 +24,16 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    permissions: write-all
     
     env:
       DB_USER: root
       DB_OLD_PASSWORD: root
       DB_PASSWORD: mysql
+
+    permissions:
+      id-token: write
+      contents: read
+      checks: write
 
     steps:
       - name: checkout source
