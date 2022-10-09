@@ -10,8 +10,8 @@ describe('prices', () => {
         ({app, connection} = await createApp());
     });
 
-    afterEach(function () {
-        connection.close()
+    afterEach(async () => {
+        await connection.end()
     });
 
     it('does something', async () => {
@@ -19,8 +19,8 @@ describe('prices', () => {
         const response = await request(app)
             .get('/prices?type=1jour')
 
-        var exptectedResult = {cost: 35} // change this to make the test pass
-        expect(response.body).deep.equal(exptectedResult)
+        var expectedResult = {cost: 35} // change this to make the test pass
+        expect(response.body).deep.equal(expectedResult)
     });
 
 });
