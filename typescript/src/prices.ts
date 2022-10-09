@@ -29,7 +29,7 @@ async function createApp() {
             if (req.query.type !== 'night') {
                 const holidays = (await connection.query(
                     'SELECT * FROM `holidays`'
-                ))[0]
+                ))[0] as mysql.RowDataPacket[];
 
                 let isHoliday;
                 let reduction = 0
