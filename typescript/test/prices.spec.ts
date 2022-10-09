@@ -13,7 +13,7 @@ describe('prices', () => {
     });
 
     afterEach(async () => {
-        await connection.close()
+        await connection.end()
     });
 
     it('default cost', async () => {
