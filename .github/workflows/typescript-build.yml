@@ -33,6 +33,7 @@ jobs:
     - name: Start MYSQL and import DB
       run: |
         sudo systemctl start mysql
+        mysqladmin version
         mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
         mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql  
   
