@@ -1,7 +1,10 @@
 node_modules/
 npm-debug.log
+package-lock.json
 typings
+
 .idea
+
 src/*.js
 test/*.js
 *.js.map
