@@ -7,7 +7,7 @@ from db import create_lift_pass_db_connection
 
 app = Flask("lift-pass-pricing")
 
-connection_options = {"host": 'localhost', "user": 'root', "database": 'lift_pass', "password": ''}
+connection_options = {"host": 'localhost', "user": 'root', "database": 'lift_pass', "password": 'mysql'}
 connection = create_lift_pass_db_connection(connection_options)
 
 
