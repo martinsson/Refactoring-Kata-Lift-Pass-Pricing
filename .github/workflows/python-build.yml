@@ -39,7 +39,6 @@ jobs:
 
     - name: Install MySQL odbc driver
       run: |
-        cd odbc_package
         wget https://dev.mysql.com/get/Downloads/Connector-ODBC/8.0/mysql-connector-odbc_8.0.32-1ubuntu22.04_amd64.deb
         sudo dpkg -i mysql-connector-odbc_8.0.32-1ubuntu22.04_amd64.deb
 
