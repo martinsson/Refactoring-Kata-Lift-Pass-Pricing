@@ -39,10 +39,11 @@ jobs:
 
     - name: Install MySQL odbc driver
       run: |
+        sudo apt install unixodbc
         mkdir odbc_package
         cd odbc_package
-        wget https://dev.mysql.com/get/Downloads/Connector-C++/libmysqlcppconn9_8.0.32-1ubuntu22.10_amd64.deb
-        sudo dpkg -i libmysqlcppconn9_8.0.32-1ubuntu22.10_amd64.deb
+        wget https://dev.mysql.com/get/Downloads/Connector-ODBC/8.0/mysql-connector-odbc_8.0.32-1ubuntu22.10_amd64.deb
+        sudo dpkg -i mysql-connector-odbc_8.0.32-1ubuntu22.10_amd64.deb
 
     - name: Set up Python
       uses: actions/setup-python@v4
