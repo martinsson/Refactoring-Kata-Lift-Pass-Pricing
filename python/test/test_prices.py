@@ -22,13 +22,13 @@ def lift_pass_pricing_app():
     p.terminate()
 
 
-def test_1jour(lift_pass_pricing_app):
-    response = requests.get(lift_pass_pricing_app + '/prices', params={'type': '1jour', 'cost': 35})
+def test_put_1jour_price(lift_pass_pricing_app):
+    response = requests.put(lift_pass_pricing_app + '/prices', params={'type': '1jour', 'cost': 35})
     assert response.status_code == 200
 
 
-def test_night(lift_pass_pricing_app):
-    response = requests.get(lift_pass_pricing_app + '/prices', params={'type': 'night', 'cost': 19})
+def test_put_night_price(lift_pass_pricing_app):
+    response = requests.put(lift_pass_pricing_app + '/prices', params={'type': 'night', 'cost': 19})
     assert response.status_code == 200
 
 

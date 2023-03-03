@@ -15,7 +15,12 @@ connection = create_lift_pass_db_connection(connection_options)
 def prices():
     res = {}
     if request.method == 'PUT':
-        return ["put prices"]
+        lift_pass_cost = request.args["cost"]
+        lift_pass_type = request.args["type"]
+        cursor = connection.cursor()
+        cursor.execute('INSERT INTO `base_price` (type, cost) VALUES (?, ?) ' +
+            'ON DUPLICATE KEY UPDATE cost = ?', (lift_pass_type, lift_pass_cost, lift_pass_cost))
+        return {}
     elif request.method == 'GET':
         cursor = connection.cursor()
         cursor.execute(f'SELECT cost FROM base_price '
