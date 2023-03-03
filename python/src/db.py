@@ -1,9 +1,14 @@
 import pyodbc
 
 
-def create_lift_pass_db_connection():
+def create_lift_pass_db_connection(connection_options):
     driver = get_mariadb_driver()
-    connection_string = make_connection_string_template(driver) % ("localhost", "root", "lift_pass", "")
+    connection_string = make_connection_string_template(driver) % (
+        connection_options["host"],
+        connection_options["user"],
+        connection_options["database"],
+        connection_options["password"],
+    )
     return pyodbc.connect(connection_string)
 
 
