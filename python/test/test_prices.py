@@ -68,8 +68,8 @@ def test_works_for_night_passes(lift_pass_pricing_app, age, expectedCost):
 @pytest.mark.parametrize(
     "age,expectedCost,ski_date", [
         (15, 35, datetime.fromisoformat('2019-02-22')),
-        (15, 35, datetime.fromisoformat('2019-02-25')),
-        (15, 23, datetime.fromisoformat('2019-03-11')),
+        (15, 35, datetime.fromisoformat('2019-02-25')), # monday, holiday
+        (15, 23, datetime.fromisoformat('2019-03-11')), # monday
         (65, 18, datetime.fromisoformat('2019-03-11')),  # monday
     ])
 def test_works_for_monday_deals(lift_pass_pricing_app, age, expectedCost, ski_date):

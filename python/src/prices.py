@@ -1,3 +1,5 @@
+import math
+
 from flask import Flask
 from flask import request
 from datetime import datetime
@@ -20,20 +22,45 @@ def prices():
                        + 'WHERE type = ? ', (request.args['type'],))
         row = cursor.fetchone()
         result = {"cost": row[0]}
-        res.update(result)
         if 'age' in request.args and request.args.get('age', type=int) < 6:
              res["cost"] = 0
-        # else:
-        #     if request.args["type"] != "night":
-        #         cursor = connection.cursor()
-        #         cursor.execute('SELECT * FROM holidays')
-        #         is_holiday = None
-        #         reduction = 0
-        #         for row in cursor.fetchall():
-        #             holiday = row[0]
-        #             if "date" in request.args:
-        #                 d = datetime.fromisoformat(request.args["date"])
+        else:
+            if "type" in request.args and request.args["type"] != "night":
+                cursor = connection.cursor()
+                cursor.execute('SELECT * FROM holidays')
+                is_holiday = False
+                reduction = 0
+                for row in cursor.fetchall():
+                    holiday = row[0]
+                    if "date" in request.args:
+                        d = datetime.fromisoformat(request.args["date"])
+                        if d.year == holiday.year and d.month == holiday.month and holiday.day == d.day:
+                            is_holiday = True
+                if not is_holiday and "date" in request.args and datetime.fromisoformat(request.args["date"]).weekday() == 0:
+                    reduction = 35
 
+                # TODO: apply reduction for others
+                if 'age' in request.args and request.args.get('age', type=int) < 15:
+                     res['cost'] = math.ceil(result["cost"]*.7)
+                else:
+                    if 'age' not in request.args:
+                        cost = result['cost'] * (1 - reduction/100)
+                        res['cost'] = math.ceil(cost)
+                    else:
+                        if 'age' in request.args and request.args.get('age', type=int) > 64:
+                            cost = result['cost'] * .75 * (1 - reduction / 100)
+                            res['cost'] = math.ceil(cost)
+                        elif 'age' in request.args:
+                            cost = result['cost'] * (1 - reduction / 100)
+                            res['cost'] = math.ceil(cost)
+            else:
+                if 'age' in request.args and request.args.get('age', type=int) >= 6:
+                    if request.args.get('age', type=int) > 64:
+                        res['cost'] = math.ceil(result['cost'] * .4)
+                    else:
+                        res.update(result)
+                else:
+                    res['cost'] = 0
 
         return res
 
