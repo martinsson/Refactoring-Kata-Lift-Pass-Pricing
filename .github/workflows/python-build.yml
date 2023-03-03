@@ -1,4 +1,4 @@
-name: python-buld
+name: python-build
 
 env:
   PROJECT_DIR: python
@@ -19,7 +19,7 @@ jobs:
       run:
         working-directory: ./${{ env.PROJECT_DIR }}
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     env:
       DB_USER: root
@@ -39,11 +39,9 @@ jobs:
 
     - name: Install MySQL odbc driver
       run: |
-        sudo apt install unixodbc
-        mkdir odbc_package
         cd odbc_package
-        wget https://dev.mysql.com/get/Downloads/Connector-ODBC/8.0/mysql-connector-odbc_8.0.32-1ubuntu22.10_amd64.deb
-        sudo dpkg -i mysql-connector-odbc_8.0.32-1ubuntu22.10_amd64.deb
+        wget https://dev.mysql.com/get/Downloads/Connector-ODBC/8.0/mysql-connector-odbc_8.0.32-1ubuntu22.04_amd64.deb
+        sudo dpkg -i mysql-connector-odbc_8.0.32-1ubuntu22.04_amd64.deb
 
     - name: Set up Python
       uses: actions/setup-python@v4
