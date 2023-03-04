@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 
-let connectionOptions = {
+const connectionOptions = {
     host: "localhost",
     user: "root",
     database: "lift_pass",
