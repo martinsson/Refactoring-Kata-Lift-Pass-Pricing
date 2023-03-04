@@ -1,0 +1,11 @@
+{
+  "name": "lift-pass-pricing",
+  "module": "prices.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "^0.5.0"
+  },
+  "dependencies": {
+    "mysql2": "^3.2.0"
+  }
+}
