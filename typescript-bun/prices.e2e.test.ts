@@ -18,6 +18,6 @@ test("does something", async () => {
     expect(
         await (await fetch(`localhost:${PORT}/prices?type=1jour`)).json()
     ).toEqual({
-        cost: 35,
+        cost: 123,
     });
 });
