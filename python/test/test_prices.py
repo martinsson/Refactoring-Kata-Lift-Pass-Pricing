@@ -3,6 +3,7 @@ import multiprocessing
 import pytest
 import requests
 from datetime import datetime
+import time
 
 from prices import app
 
@@ -18,6 +19,8 @@ def lift_pass_pricing_app():
     """ starts the lift pass pricing flask app running on localhost """
     p = multiprocessing.Process(target=server, args=(TEST_PORT,))
     p.start()
+    # we need to give it time to start - one second usually seems to be enough
+    time.sleep(1)
     yield f"http://127.0.0.1:{TEST_PORT}"
     p.terminate()
 

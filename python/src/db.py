@@ -8,9 +8,12 @@ def create_lift_pass_db_connection(connection_options):
         try_to_connect_with_sqlite3,
     ]
     for fun in connection_functions:
-        connection = fun(connection_options)
-        if connection is not None:
-            return connection
+        try:
+            connection = fun(connection_options)
+            if connection is not None:
+                return connection
+        except Exception as e:
+            print(f"unable to connect to db with {fun}")
     raise RuntimeError("Unable to connect to the database.")
 
 
