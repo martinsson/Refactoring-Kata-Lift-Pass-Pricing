@@ -1,12 +1,42 @@
+from pathlib import Path
 
 
 def create_lift_pass_db_connection(connection_options):
-    connection_functions = [try_to_connect_with_odbc, try_to_connect_with_pymysql]
+    connection_functions = [
+        try_to_connect_with_odbc,
+        try_to_connect_with_pymysql,
+        try_to_connect_with_sqlite3,
+    ]
     for fun in connection_functions:
         connection = fun(connection_options)
         if connection is not None:
             return connection
     raise RuntimeError("Unable to connect to the database.")
+
+
+def try_to_connect_with_sqlite3(connection_options):
+    import sqlite3
+    connection = sqlite3.connect("lift_pass.db")
+    create_statements = [
+        """CREATE TABLE IF NOT EXISTS base_price (
+            pass_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type VARCHAR(255) NOT NULL,
+            cost INTEGER NOT NULL
+        );""",
+        """INSERT INTO base_price (type, cost) VALUES ('1jour', 35);""",
+        """INSERT INTO base_price (type, cost) VALUES ('night', 19);""",
+        """CREATE TABLE IF NOT EXISTS holidays (
+            holiday DATE NOT NULL,
+            description VARCHAR(255) NOT NULL
+        );""",
+        "INSERT INTO holidays (holiday, description) VALUES ('2019-02-18', 'winter');",
+        "INSERT INTO holidays (holiday, description) VALUES ('2019-02-25', 'winter');",
+        "INSERT INTO holidays (holiday, description) VALUES ('2019-03-04', 'winter');",
+    ]
+    for statement in create_statements:
+        connection.execute(statement)
+
+    return connection
 
 
 def try_to_connect_with_pymysql(connection_options):
