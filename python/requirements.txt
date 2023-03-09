@@ -2,3 +2,4 @@ Flask
 pytest
 requests
 pyodbc
+PyMySQL
