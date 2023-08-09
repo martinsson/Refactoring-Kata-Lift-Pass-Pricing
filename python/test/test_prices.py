@@ -2,10 +2,9 @@ import multiprocessing
 
 import pytest
 import requests
-from datetime import datetime
 import time
 
-from prices import app
+from python.src.prices import app
 
 TEST_PORT = 3006
 
@@ -35,6 +34,13 @@ def lift_pass_pricing_app():
     p.terminate()
 
 
-def test_something(lift_pass_pricing_app):
+def test_get_price_without_param_raise_error(lift_pass_pricing_app):
+    """Ensure we raise an error if no parameter are send"""
+    #with pytest.raises(ValueError):
+    requests.get(lift_pass_pricing_app + "/prices")
+    # todo
+
+
+def test_get_price_with_success_return_price(lift_pass_pricing_app):
     response = requests.get(lift_pass_pricing_app + "/prices", params={'type': '1jour'})
     assert response.json() == {'cost': 35}
