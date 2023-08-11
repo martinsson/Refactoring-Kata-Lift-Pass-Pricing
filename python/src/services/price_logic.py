@@ -10,10 +10,9 @@ class PriceLogic:
 
     def calculate_price(self, lift_pass_type: str, age: Optional[int] = None,
                         reservation_date: Optional[str] = None,
-                        ) -> dict:
+                        ) -> dict[str, int]:
         res = {}
-        raw_cost = self.price_dao.find_base_price(lift_pass_type)
-        base_price = Cost(raw_cost["cost"])
+        base_price = self.price_dao.find_base_price(lift_pass_type)
         if age and age < 6:
             res["cost"] = 0
         else:
