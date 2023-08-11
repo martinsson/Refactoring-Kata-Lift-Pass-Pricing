@@ -23,8 +23,8 @@ class LiftPassPricingSpec extends AnyFunSpec with ScalatestRouteTest {
       withPrices { app =>
         Get("/prices?type=1jour") ~> app ~> check {
 
-          val exptectedResult = Cost(35) // change this to make the test pass
-          responseAs[Cost] shouldBe exptectedResult
+          val expectedResult = Cost(35) // change this to make the test pass
+          responseAs[Cost] shouldBe expectedResult
         }
       }
     }
