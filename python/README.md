@@ -1,6 +1,6 @@
 # Python version of Lift Pass Pricing Kata
 
-As with the other language versions, this exercise requires a database. There is a description in the [top level README](../README.md) of how to set up MySQL. If you don't have that, this version should fall back on sqlite3, and create a local database file 'lift_pass.db' in the directory where you run the application. Unfortunately the code doesn't actually work properly with sqlite3, so you'll have to adjust the SQL statements in prices.py.
+As with the other language versions, this exercise requires a database. There is a description in the [top level README](../README.md) of how to set up MySQL. If you don't have that, this version should fall back on sqlite3, and create a local database file 'lift_pass.db' in the directory where you run the application.
 
 For this python version you will also need to install the dependencies. I recommend you install them in a virtual environment like this:
 
