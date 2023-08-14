@@ -48,6 +48,7 @@ def try_to_connect_with_sqlite3(connection_options):
     ]
     for statement in create_statements:
         connection.execute(statement)
+        connection.commit()
 
     return connection
 
