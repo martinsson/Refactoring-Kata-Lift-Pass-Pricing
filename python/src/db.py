@@ -20,6 +20,16 @@ def create_lift_pass_db_connection(connection_options):
 def try_to_connect_with_sqlite3(connection_options):
     import sqlite3
     connection = sqlite3.connect("lift_pass.db")
+    try:
+        connection.execute(
+            'SELECT * FROM holidays '
+            'WHERE holiday = 2019-03-04'
+        )
+    except sqlite3.OperationalError:
+        pass
+    else:
+        return connection
+
     create_statements = [
         """CREATE TABLE IF NOT EXISTS base_price (
             pass_id INTEGER PRIMARY KEY AUTOINCREMENT,
