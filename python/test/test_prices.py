@@ -5,13 +5,15 @@ import requests
 from datetime import datetime
 import time
 
-from prices import app
+from prices import create_app
 
 TEST_PORT = 3006
 
 
 def server(port):
+    app, connection = create_app()
     app.run(port=port)
+
 
 
 def wait_for_server_to_start(server_url):
