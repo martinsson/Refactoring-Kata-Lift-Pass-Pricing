@@ -8,15 +8,11 @@ env:
 # Controls when the action will run. 
 on:
   push:
-    branches:
-      - with_tests
     paths:
       - 'java-simple/**'
       - '**/java-simple-build.yml'
       
   pull_request:
-    branches:
-      - with_tests
     paths:
       - 'java-simple/**'
       - '**/java-simple-build.yml'

@@ -54,4 +54,3 @@ jobs:
 
     - name: Test
       run: PYTHONPATH=src python -m pytest
- 

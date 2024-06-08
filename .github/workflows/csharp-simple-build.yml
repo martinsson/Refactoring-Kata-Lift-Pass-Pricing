@@ -4,14 +4,10 @@ name: csharp-simple-build
 # Controls when the action will run.
 on:
   push:
-    branches:
-      - with_tests
     paths:
       - 'csharp-simple/**'
       - '**/csharp-simple-build.yml'
   pull_request:
-    branches:
-      - with_tests
     paths:
       - 'csharp-simple/**'
       - '**/csharp-simple-build.yml'
