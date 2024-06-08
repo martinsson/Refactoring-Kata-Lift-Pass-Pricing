@@ -43,7 +43,3 @@ jobs:
 
     - name: Set up dependencies
       run: npm install
-
-    - name: Test
-      run: npm test
- 

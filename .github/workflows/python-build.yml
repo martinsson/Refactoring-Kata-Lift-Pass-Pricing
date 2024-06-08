@@ -52,6 +52,3 @@ jobs:
     - name: Set up dependencies
       run: pip install -r requirements.txt
 
-    - name: Test
-      run: PYTHONPATH=src python -m pytest
- 

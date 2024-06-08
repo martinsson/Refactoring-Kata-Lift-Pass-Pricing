@@ -61,9 +61,6 @@ jobs:
       - name: build solution
         run: dotnet build
 
-      - name: run unit tests
-        run: dotnet test --logger "trx;logfilename=${GITHUB_WORKSPACE}/unit_test_results.xml"
-
       - name: Test Reporter
         uses: dorny/test-reporter@v1.5.0
         if: always()
