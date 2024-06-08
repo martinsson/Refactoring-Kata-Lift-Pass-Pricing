@@ -14,10 +14,9 @@ describe('prices', () => {
     });
 
     it('does something', async () => {
-        const response = await request(app)
-            .get('/prices?type=1jour')
+        const {body} = await request(app)
+            .get('/prices')
 
-        const expectedResult = {cost: 123} // change this to make the test pass
-        expect(response.body).toEqual(expectedResult)    
-    })    
+        expect(body.putSomethingHere).toEqual(35)
+    })
 })

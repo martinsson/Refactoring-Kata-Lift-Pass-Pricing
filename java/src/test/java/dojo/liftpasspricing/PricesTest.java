@@ -1,15 +1,16 @@
 package dojo.liftpasspricing;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import spark.Spark;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.junit.jupiter.api.*;
-
-import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
-import spark.Spark;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PricesTest {
 

@@ -1,13 +1,13 @@
-import {assert, expect} from 'chai';
-import request from 'supertest-as-promised';
 import {createApp} from "../src/prices"
+import request from 'supertest'
+import {expect} from 'chai';
 
 describe('prices', () => {
 
     let app, connection
 
     beforeEach(async () => {
-        ({app, connection} = await createApp());
+        ({app, connection} = await createApp())
     });
 
     afterEach(async () => {
@@ -16,11 +16,10 @@ describe('prices', () => {
 
     it('does something', async () => {
 
-        const response = await request(app)
+        const {body} = await request(app)
             .get('/prices?type=1jour')
 
-        var expectedResult = {cost: 35} // change this to make the test pass
-        expect(response.body).deep.equal(expectedResult)
+        expect(body.putSomethingHere).equal(35)
     });
 
 });
