@@ -43,9 +43,7 @@ jobs:
         php-version: ${{ matrix.php-version }}
 
     - name: Set up dependencies
-      run: |
-        composer update
-        composer install
+      run: composer update
 
     - name: Test
       run: ./vendor/bin/phpunit
