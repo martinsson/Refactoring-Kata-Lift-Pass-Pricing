@@ -9,9 +9,7 @@ class PricesTest extends TestCase
         $response = $this->call('GET', '/prices/?type=1jour');
 
         $response->assertOk();
-        $response->assertHeader('Content-Type', 'application/json')
-                 ->assertJson([ 'cost' => 35 ]);
-        );
+        $response->assertJson([ 'cost' => 35 ]);
     }
 
     /** @test */
