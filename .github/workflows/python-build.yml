@@ -1,0 +1,57 @@
+name: python-build
+
+env:
+  PROJECT_DIR: python
+
+on:
+  push:
+    paths:
+      - 'python/**'
+      - '.github/workflows/python-build.yml'
+  pull_request:
+    paths:
+      - 'python/**'
+      - '.github/workflows/python-build.yml'
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ./${{ env.PROJECT_DIR }}
+
+    runs-on: ubuntu-22.04
+
+    env:
+      DB_USER: root
+      DB_OLD_PASSWORD: root
+      DB_PASSWORD: mysql
+      
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Start MYSQL and import DB
+      run: |
+        sudo systemctl start mysql
+        mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} version
+        mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
+        mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql  
+
+    - name: Install MySQL odbc driver
+      run: |
+        wget https://repo.mysql.com/apt/ubuntu/pool/mysql-8.0/m/mysql-community/mysql-community-client-plugins_8.0.32-1ubuntu22.04_amd64.deb
+        sudo dpkg -i mysql-community-client-plugins_8.0.32-1ubuntu22.04_amd64.deb
+        wget https://dev.mysql.com/get/Downloads/Connector-ODBC/8.0/mysql-connector-odbc_8.0.32-1ubuntu22.04_amd64.deb
+        sudo dpkg -i mysql-connector-odbc_8.0.32-1ubuntu22.04_amd64.deb
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+          python-version: '3.10'
+
+    - name: Set up dependencies
+      run: pip install -r requirements.txt
+
+    - name: Test
+      run: PYTHONPATH=src python -m pytest
+ 

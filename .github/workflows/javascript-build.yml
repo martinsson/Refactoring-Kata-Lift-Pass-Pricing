@@ -1,0 +1,49 @@
+name: javascript-buld
+
+env:
+  PROJECT_DIR: javascript
+
+on:
+  push:
+    paths:
+      - 'javascript/**'
+      - '.github/workflows/javascript-build.yml'
+  pull_request:
+    paths:
+      - 'typescript/**'
+      - '.github/workflows/javascript-build.yml'
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ./${{ env.PROJECT_DIR }}
+
+    runs-on: ubuntu-latest
+
+    env:
+      DB_USER: root
+      DB_OLD_PASSWORD: root
+      DB_PASSWORD: mysql
+      
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Start MYSQL and import DB
+      run: |
+        sudo systemctl start mysql
+        mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
+        mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql  
+  
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 15.x
+
+    - name: Set up dependencies
+      run: npm install
+
+    - name: Test
+      run: npm test
+ 
