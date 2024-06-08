@@ -12,15 +12,24 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: ./php-simple
+
     runs-on: ubuntu-latest
+
     env:
       DB_USER: root
       DB_OLD_PASSWORD: root
       DB_PASSWORD: mysql
+
+    strategy:
+      matrix:
+        php-version: ["7.3", "8.0", "8.2"]
       
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Start MYSQL and import DB
       run: |
@@ -31,12 +40,12 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 7.3
+        php-version: ${{ matrix.php-version }}
 
     - name: Set up dependencies
-      working-directory: php-simple
-      run: composer install
+      run: |
+        composer update
+        composer install
 
     - name: Test
-      working-directory: php-simple
       run: ./vendor/bin/phpunit
