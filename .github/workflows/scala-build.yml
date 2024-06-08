@@ -12,15 +12,20 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: ./scala
+
     runs-on: ubuntu-latest
+
     env:
       DB_USER: root
       DB_OLD_PASSWORD: root
       DB_PASSWORD: mysql
       
     steps:
-    - name: Check out the repo
-      uses: actions/checkout@v3
+    - name: Checkout Repository
+      uses: actions/checkout@v4
       
     - name: Start MYSQL and import DB
       run: |
@@ -31,10 +36,9 @@ jobs:
     - name: Set up Java
       uses: actions/setup-java@v3
       with:
-        distribution: 'temurin'
+        distribution: 'adopt'
         java-version: '17'
         cache: 'sbt'
 
     - name: Build and test
-      working-directory: scala
       run: sbt test

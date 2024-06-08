@@ -6,11 +6,11 @@ class PricesTest extends TestCase
     /** @test */
     public function daypassWithNoAge()
     {
-        $this->get('/prices/?type=1jour');
+        $response = $this->call('GET', '/prices/?type=1jour');
 
-        $this->seeJsonEquals(
-            ['cost'=>35],
-            $this->response->getContent()
+        $response->assertOk();
+        $response->assertHeader('Content-Type', 'application/json')
+                 ->assertJson([ 'cost' => 35 ]);
         );
     }
 

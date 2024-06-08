@@ -1,8 +1,5 @@
 name: javascript-buld
 
-env:
-  PROJECT_DIR: javascript
-
 on:
   push:
     paths:
@@ -17,7 +14,7 @@ jobs:
   build:
     defaults:
       run:
-        working-directory: ./${{ env.PROJECT_DIR }}
+        working-directory: ./javascript
 
     runs-on: ubuntu-latest
 
@@ -26,9 +23,13 @@ jobs:
       DB_OLD_PASSWORD: root
       DB_PASSWORD: mysql
       
+    strategy:
+      matrix:
+        node-version: [10, 12, 14, 16, 18]
+      
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Start MYSQL and import DB
       run: |
@@ -37,12 +38,12 @@ jobs:
         mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql  
   
     - name: Set up Node.js
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
-        node-version: 15.x
+        node-version: ${{ matrix.node-version }}
 
     - name: Set up dependencies
-      run: npm install
+      run: npm install --force
 
     - name: Test
       run: npm test
