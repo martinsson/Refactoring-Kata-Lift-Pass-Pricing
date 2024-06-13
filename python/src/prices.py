@@ -46,6 +46,8 @@ def prices():
                     holiday = row[0]
                     if "date" in request.args:
                         d = datetime.fromisoformat(request.args["date"])
+                        if not isinstance(holiday, datetime):
+                            holiday = datetime.fromisoformat(holiday)
                         if d.year == holiday.year and d.month == holiday.month and holiday.day == d.day:
                             is_holiday = True
                 if not is_holiday and "date" in request.args and datetime.fromisoformat(request.args["date"]).weekday() == 0:
