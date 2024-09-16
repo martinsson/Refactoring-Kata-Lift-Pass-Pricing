@@ -13,7 +13,7 @@ Check the [Python documentation](https://docs.python.org/3/library/venv.html) fo
 You can start the application like this:
 
     cd src 
-    python -m prices
+    python -m main
 
 Note there is no webpage on the default url - try this url as an example to check it's running: http://127.0.0.1:3005/prices?type=1jour
 
