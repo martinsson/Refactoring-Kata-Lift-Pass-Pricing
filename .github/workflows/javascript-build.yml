@@ -25,7 +25,7 @@ jobs:
       
     strategy:
       matrix:
-        node-version: [10, 12, 14, 16, 18]
+        node-version: [10, 12, 14, 16, 17, 18, 19, 20, 21, 22]
       
     steps:
     - name: Checkout Repository
