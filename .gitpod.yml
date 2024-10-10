@@ -1,0 +1,31 @@
+image:
+  file: .gitpod.dockerfile
+
+ports:
+  - port: 1234
+    onOpen: open-browser
+    name: CppEndpoint
+    description: Lift Pass Pricing Cpp Rest endpoint
+    visibility: public
+  - port: 8000
+    onOpen: open-browser
+    name: PHPEndpoint
+    description: Lift Pass Pricing PHP Rest endpoint
+    visibility: public
+  - port: 3306
+    onOpen: ignore
+    name: MySQL
+    description: MySQL connector port
+    visibility: public
+
+vscode:
+  extensions:
+    - streetsidesoftware.code-spell-checker
+    - DavidAnson.vscode-markdownlint
+    - Gruntfuggly.todo-tree
+    - llvm-vs-code-extensions.vscode-clangd
+    - twxs.cmake
+    - ms-vscode.cmake-tools
+    - bmewburn.vscode-intelephense-client
+
+workspaceLocation: '/workspace/Refactoring-Kata-Lift-Pass-Pricing/cpp'
