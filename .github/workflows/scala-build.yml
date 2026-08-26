@@ -26,7 +26,7 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v7
-      
+
     - name: Start MYSQL and import DB
       run: |
         sudo systemctl start mysql

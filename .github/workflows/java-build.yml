@@ -9,7 +9,7 @@ on:
     paths:
       - 'java/**'
       - '.github/workflows/java-build.yml'
-    
+
 jobs:
   build:
     defaults:
@@ -37,7 +37,7 @@ jobs:
           mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
           mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
 
-      - name: Set up Java
+      - name: Set up Java build
         uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
@@ -49,7 +49,6 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('./pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-          
+
       - name: Build and test
-        run: |
-          mvn -B clean verify -DskipTests
+        run: mvn -B clean verify -DskipTests
