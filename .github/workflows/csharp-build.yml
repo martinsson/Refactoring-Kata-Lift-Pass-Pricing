@@ -38,13 +38,6 @@ jobs:
         with:
           dotnet-version: 3.1.x
 
-      - name: use nuget cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: ${{ runner.os }}-nuget
-
       - name: install dependencies
         run: dotnet restore
 
