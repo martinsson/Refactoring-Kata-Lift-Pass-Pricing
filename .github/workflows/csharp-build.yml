@@ -35,7 +35,7 @@ jobs:
           mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
 
       - name: Setup dotnet build
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 3.1.x
 
