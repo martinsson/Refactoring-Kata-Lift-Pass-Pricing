@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "mysql2": "^2.2.2"
+    "mysql2": "^2.3.3"
   },
   "devDependencies": {
     "jest": "^26.4.2",
