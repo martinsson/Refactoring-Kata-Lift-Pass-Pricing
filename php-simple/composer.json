@@ -2,7 +2,7 @@
     "name": "codecop/lift-pass-pricing",
     "type": "project",
     "require": {
-        "php": ">=7.3.0",
+        "php": ">=8.0.0",
         "laravel/lumen-framework": "8.3.*"
     },
     "require-dev": {
