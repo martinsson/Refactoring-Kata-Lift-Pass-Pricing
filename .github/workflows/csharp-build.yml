@@ -33,6 +33,11 @@ jobs:
           mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
           mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
 
+      - name: install OpenSSL 1.1 (for old dotnet)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl1.1
+
       - name: Set up dotnet build
         uses: actions/setup-dotnet@v6
         with:
