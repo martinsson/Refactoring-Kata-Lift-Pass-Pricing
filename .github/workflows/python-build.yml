@@ -16,7 +16,7 @@ jobs:
       run:
         working-directory: ./python
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     env:
       DB_USER: root
