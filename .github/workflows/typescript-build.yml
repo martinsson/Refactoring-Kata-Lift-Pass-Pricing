@@ -46,4 +46,5 @@ jobs:
       run: npm install --force
 
     - name: Build and test
-      run: npm run compile
+      run: |
+        npm run compile
