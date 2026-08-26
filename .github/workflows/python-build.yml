@@ -16,7 +16,7 @@ jobs:
       run:
         working-directory: ./python
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     env:
       DB_USER: root
@@ -25,16 +25,15 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.8", "3.10", "3.12"]
+        python-version: ["3.8", "3.10", "3.12", "3.14"]
       
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - name: Start MYSQL and import DB
       run: |
         sudo systemctl start mysql
-        mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} version
         mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
         mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql  
 
@@ -46,7 +45,7 @@ jobs:
         sudo dpkg -i mysql-connector-odbc_8.0.32-1ubuntu22.04_amd64.deb
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v7
       with:
           python-version: ${{ matrix.python-version }}
 

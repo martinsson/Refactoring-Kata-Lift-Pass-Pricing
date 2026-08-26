@@ -22,23 +22,23 @@ jobs:
       DB_USER: root
       DB_OLD_PASSWORD: root
       DB_PASSWORD: mysql
-      
+
     strategy:
       matrix:
-        node-version: [10, 12, 14, 16, 17, 18, 19, 20, 21, 22]
+        node-version: [10, 12, 14, 16, 18, 20, 22, 24, 26]
       
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
 
     - name: Start MYSQL and import DB
       run: |
         sudo systemctl start mysql
         mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
         mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql  
-  
+
     - name: Set up Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ matrix.node-version }}
 

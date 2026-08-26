@@ -22,14 +22,14 @@ jobs:
       DB_USER: root
       DB_OLD_PASSWORD: root
       DB_PASSWORD: mysql
-      
+
     strategy:
       matrix:
-        java-version: [8, 11, 17, 21]
+        java-version: [8, 11, 17, 21, 25]
       
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Start MYSQL and import DB
         run: |
@@ -37,18 +37,11 @@ jobs:
           mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
           mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
 
-      - name: Set up Java
-        uses: actions/setup-java@v3
+      - name: Set up Java build
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
           java-version: ${{ matrix.java-version }}
-          
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('./pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
           
       - name: Build and test
         run: |
