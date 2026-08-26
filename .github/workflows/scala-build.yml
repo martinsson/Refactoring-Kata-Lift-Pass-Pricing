@@ -40,5 +40,8 @@ jobs:
         java-version: '17'
         cache: 'sbt'
 
+    - name: Set up Scala/sbt
+      uses: sbt/setup-sbt@v1
+
     - name: Build and test
       run: sbt test
