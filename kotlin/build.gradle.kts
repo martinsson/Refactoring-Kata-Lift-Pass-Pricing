@@ -32,6 +32,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("mysql:mysql-connector-java:$mysql_version")
+
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
     testImplementation( "io.rest-assured:rest-assured:$restassured_version")
