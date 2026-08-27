@@ -14,7 +14,7 @@ internal class PricesTest {
     private lateinit var app: ApplicationEngine
 
     @BeforeEach
-    fun `create Prices`() {
+    fun createPrices() {
         Prices.createApp().let {
             connection = it.first
             app = it.second
@@ -23,7 +23,7 @@ internal class PricesTest {
     }
 
     @AfterEach
-    fun `stop application`() {
+    fun stopApplication() {
         app.stop(200, 200)
         connection.close()
     }
@@ -58,4 +58,3 @@ internal class PricesTest {
         return this.`as`(T::class.java)
     }
 }
-

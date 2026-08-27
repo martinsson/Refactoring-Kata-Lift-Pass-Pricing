@@ -12,10 +12,12 @@ import java.sql.DriverManager
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 object Prices {
+
     fun createApp(): Pair<Connection, ApplicationEngine> {
+
         val connection: Connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/lift_pass", "root", "mysql")
+
         val app = embeddedServer(Netty, 4567) {
             routing {
                 put("/prices") {
@@ -47,11 +49,9 @@ object Prices {
                                 WHERE type = ?
                             """.trimIndent()
                     ).use { costStmt ->
-
                         costStmt.setString(1, call.request.queryParameters["type"])
 
-                        costStmt.use {
-                            val result = it.executeQuery()
+                        costStmt.executeQuery().use { result ->
                             result.next()
 
                             var reduction = 0
@@ -63,13 +63,14 @@ object Prices {
                             """.trimIndent()
                             } else {
                                 reduction = 0
+
                                 if (call.request.queryParameters["type"] != "night") {
                                     val isoFormat = SimpleDateFormat("yyyy-MM-dd")
                                     connection.prepareStatement(
                                             "SELECT * FROM holidays"
                                     ).use { holidayStmt ->
-
                                         val holidays = holidayStmt.executeQuery()
+
                                         while (holidays.next()) {
                                             val holiday = holidays.getDate("holiday")
                                             if (call.request.queryParameters["date"] != null) {
@@ -84,7 +85,6 @@ object Prices {
                                         }
                                     }
 
-
                                     if (call.request.queryParameters["date"] != null) {
                                         val calendar = Calendar.getInstance()
                                         calendar.time = isoFormat.parse(call.request.queryParameters["date"])
@@ -96,24 +96,24 @@ object Prices {
                                     // TODO apply reduction for others
                                     if (age != null && age < 15) {
                                         """
-                                           { "cost": ${Math.ceil(result.getInt("cost") * .7).toInt()} } 
+                                           { "cost": ${Math.ceil(result.getInt("cost") * .7).toInt()} }
                                         """.trimIndent()
                                     } else {
                                         if (age == null) {
                                             val cost = result.getInt("cost") * (1 - reduction / 100.0)
                                             """
-                                            {"cost": ${Math.ceil(cost).toInt()} } 
+                                            {"cost": ${Math.ceil(cost).toInt()} }
                                             """.trimIndent()
                                         } else {
                                             if (age > 64) {
                                                 val cost = result.getInt("cost") * .75 * (1 - reduction / 100.0)
                                                 """
-                                                {"cost": ${Math.ceil(cost).toInt()} } 
+                                                {"cost": ${Math.ceil(cost).toInt()} }
                                                 """.trimIndent()
                                             } else {
                                                 val cost = result.getInt("cost") * (1 - reduction / 100.0)
                                                 """
-                                                {"cost": ${Math.ceil(cost).toInt()} } 
+                                                {"cost": ${Math.ceil(cost).toInt()} }
                                                 """.trimIndent()
                                             }
                                         }
@@ -122,27 +122,28 @@ object Prices {
                                     if (age != null && age >= 6) {
                                         if (age > 64) {
                                             """
-                                           { "cost": ${Math.ceil(result.getInt("cost") * .4).toInt()} } 
+                                           { "cost": ${Math.ceil(result.getInt("cost") * .4).toInt()} }
                                         """.trimIndent()
                                         } else {
                                             """
-                                            { "cost": ${result.getInt("cost")}  }    
+                                            { "cost": ${result.getInt("cost")}  }
                                         """.trimIndent()
                                         }
                                     } else {
                                         """
-                                    { "cost": 0 }    
+                                    { "cost": 0 }
                                     """.trimIndent()
                                     }
                                 }
                             }
-
                         }
                     }
+
                     call.respondText(response, ContentType.Application.Json)
                 }
             }
         }
+
         return connection to app
     }
 }
