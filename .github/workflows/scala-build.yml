@@ -49,7 +49,7 @@ jobs:
     - name: Smoke test
       run: |
         sbt run &
-        sleep 3
+        sleep 2
         wget -qO ./response.json "http://localhost:5010/prices?type=night&age=23&date=2019-02-18"
         pkill -f "sbt"
         sleep 1
