@@ -44,3 +44,13 @@ jobs:
 
     - name: Set up dependencies
       run: npm install --force
+
+    - name: Smoke test
+      run: |
+        node index.js &
+        sleep 2
+        wget -qO ./response.json "http://localhost:5010/prices?type=night&age=23&date=2019-02-18"
+        pkill -f "index.js"
+        sleep 1
+        cat response.json
+        jq -e '. == {"cost":19}' response.json

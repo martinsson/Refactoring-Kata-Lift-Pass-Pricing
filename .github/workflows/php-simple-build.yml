@@ -47,3 +47,13 @@ jobs:
 
     - name: Test
       run: ./vendor/bin/phpunit
+
+    - name: Smoke test
+      run: |
+        php -S localhost:8000 -t bootstrap &
+        sleep 2
+        wget -qO ./response.json "http://localhost:8000/prices?type=night&age=23&date=2019-02-18"
+        pkill -f "localhost:8000"
+        sleep 1
+        cat response.json
+        jq -e '. == {"cost":19}' response.json

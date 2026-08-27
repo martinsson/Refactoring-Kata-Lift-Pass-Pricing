@@ -43,3 +43,14 @@ jobs:
 
       - name: build solution
         run: dotnet build
+
+      - name: Smoke test
+        run: |
+          cd LiftPassPricing
+          dotnet run &
+          sleep 2
+          wget -qO ./response.json "http://localhost:5000/prices?type=night&age=23&date=2019-02-18"
+          pkill -f "dotnet"
+          sleep 1
+          cat response.json
+          jq -e '. == {"cost":19}' response.json

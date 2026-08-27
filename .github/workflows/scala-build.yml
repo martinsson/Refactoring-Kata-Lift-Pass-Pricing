@@ -45,3 +45,13 @@ jobs:
 
     - name: Build and test
       run: sbt test
+
+    - name: Smoke test
+      run: |
+        sbt run &
+        sleep 2
+        wget -qO ./response.json "http://localhost:5010/prices?type=night&age=23&date=2019-02-18"
+        pkill -f "sbt"
+        sleep 1
+        cat response.json
+        jq -e '. == {"cost":19}' response.json
