@@ -29,24 +29,21 @@ internal class PricesTest {
     }
 
     @Test
-    fun `does something`() {
+    fun doesSomething() {
         val response = RestAssured.
             given()
                 .port(4567)
-                .When()
-                .param("type","1jour")
+            .When()
+                // construct some proper url parameters
                 .get("/prices")
-                .then()
+            .then()
                 .assertThat()
-                .statusCode(200)
+                    .statusCode(200)
                 .assertThat()
-                .contentType("application/json")
-                .extract()
-                .jsonPath()
+                    .contentType("application/json")
+                .extract().jsonPath()
 
-        println(response)
-
-        assertEquals(35, response.getInt("cost"))
+        assertEquals(35, response.getInt("putSomethingHere"))
     }
 
     protected fun RequestSpecification.When(): RequestSpecification {
