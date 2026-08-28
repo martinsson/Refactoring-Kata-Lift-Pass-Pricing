@@ -1,0 +1,59 @@
+name: kotlin-build
+
+on:
+  push:
+    paths:
+      - 'kotlin/**'
+      - '.github/workflows/kotlin-build.yml'
+  pull_request:
+    paths:
+      - 'kotlin/**'
+      - '.github/workflows/kotlin-build.yml'
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ./kotlin
+
+    runs-on: ubuntu-latest
+
+    env:
+      DB_USER: root
+      DB_OLD_PASSWORD: root
+      DB_PASSWORD: mysql
+
+    strategy:
+      matrix:
+        java-version: [8, 11]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      - name: Start MYSQL and import DB
+        run: |
+          sudo systemctl start mysql
+          mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
+          mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
+
+      - name: Set up Java build
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java-version }}
+
+      - name: Build and test
+        run: |
+          ./gradlew build shadowJar -i
+          # ./gradlew test shadowJar -i
+
+      - name: Smoke test
+        run: |
+          java -jar ./build/libs/liftpasspricing-0.0.1-all.jar
+          sleep 2
+          wget -qO ./response.json "http://localhost:4567/prices?type=night&age=23&date=2019-02-18"
+          pkill -f "liftpasspricing"
+          sleep 1
+          cat response.json
+          jq -e '. == {"cost":19}' response.json
