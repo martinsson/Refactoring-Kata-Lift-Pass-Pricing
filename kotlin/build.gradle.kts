@@ -17,7 +17,7 @@ group = "dojo"
 version = "0.0.1"
 
 application {
-    mainClassName = "io.ktor.server.netty.EngineMain"
+    mainClassName = "dojo.ApplicationKt"
 }
 
 repositories {

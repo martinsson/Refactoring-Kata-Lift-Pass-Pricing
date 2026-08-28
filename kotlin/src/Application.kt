@@ -8,6 +8,7 @@ import java.sql.SQLException
 fun main(args: Array<String>) {
     val (connection, app) = Prices.createApp()
     app.start()
+
     println(
             """
             LiftPassPricing Api started on 4567,
@@ -16,20 +17,12 @@ fun main(args: Array<String>) {
             """.trimIndent()
     )
 
-    Runtime.getRuntime().addShutdownHook(Thread() {
+    app.environment.monitor.subscribe(ApplicationStopping) {
         try {
             connection.close()
         } catch (e: SQLException) {
             LoggerFactory.getLogger("Main").error("connection close", e)
         }
-    })
-}
-
-fun main2(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
-
-@Suppress("unused") // Referenced in application.conf
-@kotlin.jvm.JvmOverloads
-fun Application.module(testing: Boolean = false) {
-    install(ContentNegotiation) {
     }
+
 }
