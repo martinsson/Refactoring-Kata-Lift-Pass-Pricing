@@ -15,6 +15,13 @@ connection_options = {
 
 connection = None
 
+@app.teardown_appcontext
+def shutdown(exception=None):
+    global connection
+    if connection is not None:
+        connection.close()
+        connection = None
+
 @app.route("/prices", methods=['GET', 'PUT'])
 def prices():
     res = {}
