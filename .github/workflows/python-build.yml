@@ -58,8 +58,7 @@ jobs:
       run: |
         cd src
         python -m main &
-        sleep 3
-        wget -S "http://localhost:3005/prices?type=night&age=23&date=2019-02-18"
+        sleep 4
         wget -qO ./response.json "http://localhost:3005/prices?type=night&age=23&date=2019-02-18"
         pkill -f "main"
         sleep 1
@@ -95,7 +94,7 @@ jobs:
       run: |
         cd src
         python -m main &
-        sleep 3
+        sleep 4
         wget -qO ./response.json "http://localhost:3005/prices?type=night&age=23&date=2019-02-18"
         pkill -f "main"
         sleep 1
