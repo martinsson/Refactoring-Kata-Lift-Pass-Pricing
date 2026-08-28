@@ -25,4 +25,4 @@ or on Windows Powershell:
 To start the application:
 
     cd src 
-    python -m prices
+    python -m main

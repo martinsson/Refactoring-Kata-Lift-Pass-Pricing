@@ -57,10 +57,11 @@ jobs:
     - name: Smoke test
       run: |
         cd src
-        python -m prices &
-        sleep 2
+        python -m main &
+        sleep 3
+        wget -S "http://localhost:3005/prices?type=night&age=23&date=2019-02-18"
         wget -qO ./response.json "http://localhost:3005/prices?type=night&age=23&date=2019-02-18"
-        pkill -f "prices"
+        pkill -f "main"
         sleep 1
         cat response.json
         jq -e '. == {"cost":19}' response.json
@@ -93,10 +94,10 @@ jobs:
     - name: Smoke test
       run: |
         cd src
-        python -m prices &
-        sleep 2
+        python -m main &
+        sleep 3
         wget -qO ./response.json "http://localhost:3005/prices?type=night&age=23&date=2019-02-18"
-        pkill -f "prices"
+        pkill -f "main"
         sleep 1
         cat response.json
         jq -e '. == {"cost":19}' response.json
