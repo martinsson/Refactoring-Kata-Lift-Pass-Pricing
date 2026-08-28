@@ -1,3 +1,6 @@
 */.pytest_cache
 venv
 **/__pycache__
+
+# sqlite
+src/lift_pass.db
