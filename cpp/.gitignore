@@ -1,0 +1,12 @@
+.idea/
+.vscode/
+cmake-build-debug/
+cmake-build-release/
+.clang-format
+
+build/
+.cache/
+
+_*.bat
+app.exe
+*.swp

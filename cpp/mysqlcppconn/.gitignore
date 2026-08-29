@@ -1,0 +1,4 @@
+*.zip
+*.deb
+
+mysql-connector-c++-8.0.33-winx64/
