@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.10", "3.12", "3.14"]
-      
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v7
@@ -35,7 +35,7 @@ jobs:
       run: |
         sudo systemctl start mysql
         mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
-        mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql  
+        mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
 
     - name: Install MySQL odbc driver
       run: |
@@ -56,3 +56,53 @@ jobs:
 
     - name: Test
       run: PYTHONPATH=src python -m pytest
+
+    - name: Smoke test
+      run: |
+        cd src
+        python -m main &
+        sleep 4
+        wget -qO ./response.json "http://localhost:3005/prices?type=night&age=23&date=2019-02-18"
+        pkill -f "main"
+        sleep 1
+        cat response.json
+        jq -e '. == {"cost":19}' response.json
+
+  build-sqlite:
+    defaults:
+      run:
+        working-directory: ./python
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.10", "3.12", "3.14"]
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v7
+
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+          python-version: ${{ matrix.python-version }}
+
+    - name: Set up dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Test
+      run: PYTHONPATH=src python -m pytest
+
+    - name: Smoke test
+      run: |
+        cd src
+        python -m main &
+        sleep 4
+        wget -qO ./response.json "http://localhost:3005/prices?type=night&age=23&date=2019-02-18"
+        pkill -f "main"
+        sleep 1
+        cat response.json
+        jq -e '. == {"cost":19}' response.json

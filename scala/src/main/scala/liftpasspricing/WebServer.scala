@@ -26,6 +26,7 @@ object WebServer {
         )
       case Failure(ex) =>
         system.log.error("Failed to bind HTTP endpoint, terminating system", ex)
+        ex.printStackTrace()
         system.terminate()
     }
   }
@@ -39,7 +40,7 @@ object WebServer {
     }
 
     ActorSystem[Nothing](rootBehavior, "LiftPassPricing")
-    ()
+    Thread.currentThread().join()
   }
 
 }

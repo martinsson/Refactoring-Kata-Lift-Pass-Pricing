@@ -15,25 +15,38 @@ connection_options = {
 
 connection = None
 
+@app.teardown_appcontext
+def shutdown(exception=None):
+    global connection
+    if connection is not None:
+        connection.close()
+        connection = None
+
 @app.route("/prices", methods=['GET', 'PUT'])
 def prices():
     res = {}
+
     global connection
     if connection is None:
         connection = create_lift_pass_db_connection(connection_options)
+
     if request.method == 'PUT':
         lift_pass_cost = request.args["cost"]
         lift_pass_type = request.args["type"]
         cursor = connection.cursor()
         cursor.execute('INSERT INTO `base_price` (type, cost) VALUES (?, ?) ' +
-            'ON DUPLICATE KEY UPDATE cost = ?', (lift_pass_type, lift_pass_cost, lift_pass_cost))
+            'ON DUPLICATE KEY UPDATE cost = ?',
+            (lift_pass_type, lift_pass_cost, lift_pass_cost))
         return {}
+
     elif request.method == 'GET':
         cursor = connection.cursor()
         cursor.execute(f'SELECT cost FROM base_price '
-                       + 'WHERE type = ? ', (request.args['type'],))
+                       + 'WHERE type = ? ',
+                       (request.args['type'],))
         row = cursor.fetchone()
         result = {"cost": row[0]}
+
         if 'age' in request.args and request.args.get('age', type=int) < 6:
              res["cost"] = 0
         else:
@@ -46,8 +59,13 @@ def prices():
                     holiday = row[0]
                     if "date" in request.args:
                         d = datetime.fromisoformat(request.args["date"])
-                        if d.year == holiday.year and d.month == holiday.month and holiday.day == d.day:
+                        if not isinstance(holiday, datetime):
+                            holiday = datetime.fromisoformat(holiday)
+                        if d.year == holiday.year and \
+                           d.month == holiday.month and \
+                           d.day == holiday.day:
                             is_holiday = True
+
                 if not is_holiday and "date" in request.args and datetime.fromisoformat(request.args["date"]).weekday() == 0:
                     reduction = 35
 
@@ -56,13 +74,13 @@ def prices():
                      res['cost'] = math.ceil(result["cost"]*.7)
                 else:
                     if 'age' not in request.args:
-                        cost = result['cost'] * (1 - reduction/100)
+                        cost = result['cost'] * (1 - reduction / 100)
                         res['cost'] = math.ceil(cost)
                     else:
                         if 'age' in request.args and request.args.get('age', type=int) > 64:
                             cost = result['cost'] * .75 * (1 - reduction / 100)
                             res['cost'] = math.ceil(cost)
-                        elif 'age' in request.args:
+                        else:
                             cost = result['cost'] * (1 - reduction / 100)
                             res['cost'] = math.ceil(cost)
             else:
@@ -75,7 +93,3 @@ def prices():
                     res['cost'] = 0
 
     return res
-
-
-if __name__ == "__main__":
-    app.run(port=3005)

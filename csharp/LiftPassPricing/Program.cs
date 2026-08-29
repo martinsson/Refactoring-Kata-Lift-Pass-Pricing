@@ -17,6 +17,7 @@ namespace LiftPassPricing
             var host = new WebHostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseKestrel()
+                .UseUrls("http://localhost:5000")
                 .UseStartup<Startup>()
                 .Build();
 

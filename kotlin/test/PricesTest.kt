@@ -1,0 +1,57 @@
+import dojo.Prices
+import io.ktor.server.engine.*
+import io.restassured.RestAssured
+import io.restassured.response.ResponseBodyExtractionOptions
+import io.restassured.specification.RequestSpecification
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import java.sql.Connection
+import kotlin.test.assertEquals
+
+internal class PricesTest {
+    private lateinit var connection: Connection
+    private lateinit var app: ApplicationEngine
+
+    @BeforeEach
+    fun createPrices() {
+        Prices.createApp().let {
+            connection = it.first
+            app = it.second
+        }
+        app.start()
+    }
+
+    @AfterEach
+    fun stopApplication() {
+        app.stop(200, 200)
+        connection.close()
+    }
+
+    @Test
+    fun doesSomething() {
+        val response = RestAssured.
+            given()
+                .port(4567)
+            .When()
+                // construct some proper url parameters
+                .get("/prices")
+            .then()
+                .assertThat()
+                    .statusCode(200)
+                .assertThat()
+                    .contentType("application/json")
+                .extract().jsonPath()
+
+        assertEquals(35, response.getInt("putSomethingHere"))
+    }
+
+    protected fun RequestSpecification.When(): RequestSpecification {
+        return this.`when`()
+    }
+
+    // allows response.to<Widget>() -> Widget instance
+    protected inline fun <reified T> ResponseBodyExtractionOptions.to(): T {
+        return this.`as`(T::class.java)
+    }
+}
