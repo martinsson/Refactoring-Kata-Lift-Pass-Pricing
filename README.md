@@ -1,4 +1,4 @@
-# Lift pass pricing
+# Lift Pass Pricing
 
 ![Image logo](./mountain-snow.jpg)
 
@@ -15,30 +15,30 @@ This kata models a common problem - code that makes no sense to unit test due to
 
 You can find a [video pitch here](http://youtube.com/watch?v=-gSyD60WAvc)
 
-
-
 ## When am I done?
 
 There are a few steps, you could do any of them.
 
 1. Cover with high level tests.
-1. Refactor the code to maximize unit testability and reuse for the new feature
-1. Pull down most of the high level tests
+1. Refactor the code to maximize unit testability and reuse for the new feature.
+1. Pull down most of the high level tests.
 1. Implement the new feature using unit tests and 1 or 2 high level tests.
 
 ## Installation
 
-Set up a MySQL database on localhost 3306 with user `root` and password `mysql`.
-If you have Docker installed the easiest thing is to use this script, that will initialize a [MariaDB](https://mariadb.org/).
+Set up a MySQL or MariaDB database on localhost 3306 with user `root` and password `mysql`.
 
-    ./runLocalDatabase.sh
+    mysqladmin --user=root password mysql
 
 Inject the data with
 
     mysql -u root -p mysql < ./database/initDatabase.sql
 
+If you have Docker installed the easiest thing is to use this script, that will initialize a MySQL server.
+
+    ./runLocalDatabase.sh
+
 Then head on to the language of your choice and follow the Readme in there.
-Some of the languages have a failing test that you could finish writing.
 
 ## Tips
 
@@ -51,15 +51,24 @@ possible - there can be only top-level tests
 
 The typical workflow would be
 
-1. Cover everything from the http layer, use a real DB
-1. Separate request data extraction and sending the response from the logic
-1. Extract a method with the pure logic, move that method to an object (ex PricingLogic)
-1. Now extract the sql stuff from PricingLogic, first to some method with a signature that has nothing to do with sql, then move these methods to a new class (ex PricingDao)
+1. Cover everything from the http layer, use a real DB.
+1. Separate request data extraction and sending the response from the logic.
+1. Extract a method with the pure logic, move that method to an object (ex PricingLogic).
+1. Now extract the sql stuff from PricingLogic, first to some method with a signature that has nothing to do with sql, then move these methods to a new class (ex PricingDao).
 1. There should be ~3/4 elements, the http layer should have the PricingLogic as an injected dependency and the PricingLogic should have the PricingDao as an injected dependency.
 1. Move the bulk of the high level tests down onto PricingLogic using a fake dao, write some focused integration tests for the PricingDao using a real DB, there should be only a handful.
 
 Now the HTTP layer and the integration of the parts can be tested with very few (one or two) high-level tests.
 
+## Videos
+
+Try it first ;)
+
+[Introduction](https://www.youtube.com/watch?v=-gSyD60WAvc)
+
+[extract the business logic](https://www.youtube.com/watch?v=A06nvXyJBbk)
+
+[encapsulate primitives](https://www.youtube.com/watch?v=vcUCU_WB2uY)
 
 ## CONTRIBUTING
 
