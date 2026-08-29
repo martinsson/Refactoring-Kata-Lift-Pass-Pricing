@@ -3,4 +3,4 @@ venv
 **/__pycache__
 
 # sqlite
-src/lift_pass.db
+lift_pass.db

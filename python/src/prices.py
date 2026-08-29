@@ -34,9 +34,8 @@ def prices():
         lift_pass_cost = request.args["cost"]
         lift_pass_type = request.args["type"]
         cursor = connection.cursor()
-        cursor.execute('INSERT INTO `base_price` (type, cost) VALUES (?, ?) ' +
-            'ON DUPLICATE KEY UPDATE cost = ?',
-            (lift_pass_type, lift_pass_cost, lift_pass_cost))
+        cursor.execute('REPLACE INTO `base_price` (type, cost) VALUES (?, ?)', # sqlite fix
+            (lift_pass_type, lift_pass_cost))
         return {}
 
     elif request.method == 'GET':
@@ -60,7 +59,7 @@ def prices():
                     if "date" in request.args:
                         d = datetime.fromisoformat(request.args["date"])
                         if not isinstance(holiday, datetime):
-                            holiday = datetime.fromisoformat(holiday)
+                            holiday = datetime.fromisoformat(holiday) # sqlite fix
                         if d.year == holiday.year and \
                            d.month == holiday.month and \
                            d.day == holiday.day:

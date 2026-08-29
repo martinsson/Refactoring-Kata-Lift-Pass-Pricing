@@ -33,7 +33,7 @@ def try_to_connect_with_sqlite3(connection_options):
     create_statements = [
         """CREATE TABLE IF NOT EXISTS base_price (
             pass_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            type VARCHAR(255) NOT NULL,
+            type VARCHAR(255) NOT NULL UNIQUE,
             cost INTEGER NOT NULL
         );""",
         """INSERT INTO base_price (type, cost) VALUES ('1jour', 35);""",
