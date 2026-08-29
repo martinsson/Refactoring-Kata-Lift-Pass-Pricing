@@ -37,7 +37,7 @@ object Prices {
                             execute()
                         }
                     }
-                    call.respond("")
+                    call.respondText("", ContentType.Application.Json)
                 }
 
                 get("/prices") {
