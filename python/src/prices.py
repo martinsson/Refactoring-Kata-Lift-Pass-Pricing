@@ -58,7 +58,7 @@ def prices():
                     holiday = row[0]
                     if "date" in request.args:
                         d = datetime.fromisoformat(request.args["date"])
-                        if not isinstance(holiday, datetime):
+                        if isinstance(holiday, str):
                             holiday = datetime.fromisoformat(holiday) # sqlite fix
                         if d.year == holiday.year and \
                            d.month == holiday.month and \
