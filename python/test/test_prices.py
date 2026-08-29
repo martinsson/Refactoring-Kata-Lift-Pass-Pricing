@@ -35,18 +35,20 @@ def lift_pass_pricing_app():
     p.terminate()
 
 
-def test_put_1jour_price(lift_pass_pricing_app):
+def test_update_1jour_price(lift_pass_pricing_app):
     response = requests.put(lift_pass_pricing_app + '/prices', params={'type': '1jour', 'cost': 35})
     assert response.status_code == 200
 
 
-def test_put_night_price(lift_pass_pricing_app):
+def test_update_night_price(lift_pass_pricing_app):
     response = requests.put(lift_pass_pricing_app + '/prices', params={'type': 'night', 'cost': 19})
     assert response.status_code == 200
 
 
 def test_default_cost(lift_pass_pricing_app):
     response = requests.get(lift_pass_pricing_app + "/prices", params={'type': '1jour'})
+    assert response.status_code == 200
+    assert response.headers["Content-Type"] == "application/json"
     assert response.json() == {'cost': 35}
 
 
@@ -63,6 +65,17 @@ def test_default_cost(lift_pass_pricing_app):
 def test_works_for_all_ages(lift_pass_pricing_app, age, expectedCost):
     response = requests.get(lift_pass_pricing_app + "/prices", params={'type': '1jour', 'age': age})
     assert response.json() == {'cost': expectedCost}
+
+
+def test_real_night_cost(lift_pass_pricing_app):
+    response = requests.get(lift_pass_pricing_app + "/prices", params={'type': 'night'})
+    assert response.json() == {'cost': 0}
+
+
+@pytest.mark.skip
+def test_default_night_cost(lift_pass_pricing_app):
+    response = requests.get(lift_pass_pricing_app + "/prices", params={'type': 'night'})
+    assert response.json() == {'cost': 19}
 
 
 @pytest.mark.parametrize(
