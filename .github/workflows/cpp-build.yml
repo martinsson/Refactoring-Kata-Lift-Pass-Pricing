@@ -12,7 +12,7 @@ on:
       - '.github/workflows/cpp-build.yml'
 
 jobs:
-  build_linux:
+  build:
     defaults:
       run:
         working-directory: ./cpp
@@ -69,7 +69,7 @@ jobs:
       run:
         working-directory: ./cpp
 
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     env:
       DB_USER: root
@@ -88,15 +88,15 @@ jobs:
     - name: Configure MYSQL and import DB
       run: |
         mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
-        type .\database\initDatabase.sql | mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+        type $env:GITHUB_WORKSPACE\database\initDatabase.sql | mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
     - name: Set up MYSQL Connector
       working-directory: cpp/mysqlcppconn
       run: |
         Invoke-WebRequest -Uri https://www.code-cop.org/mysqlcppconn/mysql-connector-c++-8.0.33-winx64-debug.zip -OutFile mysql-connector.zip
         Expand-Archive -Path mysql-connector.zip -DestinationPath .
-        echo "${github_workspace}\cpp\mysqlcppconn\mysql-connector-c++-8.0.33-winx64\lib64" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-        echo "${github_workspace}\cpp\mysqlcppconn\mysql-connector-c++-8.0.33-winx64\lib64\debug" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        echo "$env.GITHUB_WORKSPACE\cpp\mysqlcppconn\mysql-connector-c++-8.0.33-winx64\lib64" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        echo "$env.GITHUB_WORKSPACE\cpp\mysqlcppconn\mysql-connector-c++-8.0.33-winx64\lib64\debug" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     - name: Build
       run: |
