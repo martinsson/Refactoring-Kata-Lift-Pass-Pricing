@@ -74,10 +74,20 @@ Try it first ;)
 
 There are two branches, the master branch and the with_tests branch. The master is always merged into the with_tests branch. 
 So typically if you want to contribute a new language or a *simple* version of a language you typically change the master branch, 
-then switch to the with_tests branch and  merge with  master, then add tests. 
+then switch to the with_tests branch and merge with master, then add tests. 
 
-Note that there are github actions for most of the with_tests versions, please do provide one if you add a language. This allows
-anyone having trouble running the tests with a baseline for getting the tests to work
+* The logic should be an exact port of existing logic, even with comments.
+* There should be two files/modules/classes, one is called `Prices`, one is app, main or program.
+* Main creates `Prices` and prints the message with URL and port.
+* `Prices` creates its DB connection and returns to main.
+* Main closes the connection in the end - if it is possible using the framework.
+* The database is MySQL (or MariaDB which is compatible) because it must be difficult to run.
+* Exercises should be agnostic of specific build tools or packet manager. Use the simplest way to manage dependencies.
+* Omit specific IDE config files and put them into `.gitignore`.
+* Do not commit lock files as everybody has a different setup.
+
+There are github actions for all versions, please do provide one if you add a language. This allows
+anyone having trouble running the tests with a baseline for getting the tests to work.
 
 When you're ready please submit one pull request for each branch
 
