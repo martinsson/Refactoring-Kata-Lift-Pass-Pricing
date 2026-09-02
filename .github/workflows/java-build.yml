@@ -50,7 +50,7 @@ jobs:
       - name: Smoke test
         run: |
           java -jar target/lift-pass-pricing-1.0-SNAPSHOT-jar-with-dependencies.jar &
-          sleep 2
+          sleep 3
           wget -qO ./response.json "http://localhost:4567/prices?type=night&age=23&date=2019-02-18"
           pkill -f "lift-pass-pricing"
           sleep 1

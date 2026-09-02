@@ -52,7 +52,7 @@ jobs:
       run: |
         cd build
         ./lift-pass &
-        sleep 2
+        sleep 3
         wget -qO ./response.json "http://localhost:1234/prices?type=night&age=23&date=2019-02-18"
         pkill -f "lift-pass"
         sleep 1
