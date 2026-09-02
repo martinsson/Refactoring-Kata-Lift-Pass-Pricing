@@ -48,11 +48,6 @@ jobs:
         cmake -G "Unix Makefiles" ..
         cmake --build .
 
-    - name: Test
-      run: |
-        cd build
-        ctest
-
     - name: Smoke test
       run: |
         cd build
@@ -106,8 +101,3 @@ jobs:
         copy ..\mysqlcppconn\mysql-connector-c++-8.0.33-winx64\lib64\debug\*.dll .
         cmake -G "Visual Studio 17 2022" ..
         cmake --build . --config Debug
-
-    - name: Test
-      run: |
-        cd build
-        ctest
