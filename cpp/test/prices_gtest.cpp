@@ -77,10 +77,9 @@ private:
     static std::mutex server_mutex;
     static std::thread server_thread;
 
+protected:
     httplib::Client cli;
     httplib::Headers headers = {std::make_pair("Accept", CONTENT_TYPE)};
-
-protected:
     static sql::Connection* con;
     int cost = -1;
 };
