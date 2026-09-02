@@ -38,7 +38,7 @@ jobs:
           mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
 
       - name: Set up Java build
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
@@ -50,7 +50,7 @@ jobs:
       - name: Smoke test
         run: |
           java -jar target/lift-pass-pricing-simple-1.0-SNAPSHOT-jar-with-dependencies.jar &
-          sleep 2
+          sleep 3
           wget -qO ./response.json "http://localhost:4567/prices?type=night&age=23&date=2019-02-18"
           pkill -f "lift-pass-pricing-simple"
           sleep 1

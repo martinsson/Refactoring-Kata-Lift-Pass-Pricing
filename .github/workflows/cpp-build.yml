@@ -1,0 +1,103 @@
+name: cpp-build
+
+on:
+  push:
+    paths:
+      - 'cpp/**'
+      - '.github/workflows/cpp-build.yml'
+
+  pull_request:
+    paths:
+      - 'cpp/**'
+      - '.github/workflows/cpp-build.yml'
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ./cpp
+
+    runs-on: ubuntu-22.04
+
+    env:
+      DB_USER: root
+      DB_OLD_PASSWORD: root
+      DB_PASSWORD: mysql
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v7
+
+    - name: Start MYSQL and import DB
+      run: |
+        sudo systemctl start mysql
+        mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
+        mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} < ${GITHUB_WORKSPACE}/database/initDatabase.sql
+
+    - name: Set up MYSQL Connector
+      working-directory: cpp/mysqlcppconn
+      run: |
+        sudo apt-get -y update
+        sudo apt-get -y install libmysqlcppconn-dev
+        sudo dpkg -L libmysqlcppconn-dev
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        cmake -G "Unix Makefiles" ..
+        cmake --build .
+
+    - name: Smoke test
+      run: |
+        cd build
+        ./lift-pass &
+        sleep 3
+        wget -qO ./response.json "http://localhost:1234/prices?type=night&age=23&date=2019-02-18"
+        pkill -f "lift-pass"
+        sleep 1
+        cat response.json
+        jq -e '. == {"cost":19}' response.json
+
+  build_windows:
+    defaults:
+      run:
+        working-directory: ./cpp
+
+    runs-on: windows-2022
+
+    env:
+      DB_USER: root
+      DB_OLD_PASSWORD:
+      DB_PASSWORD: mysql
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v7
+
+    - name: Start MYSQL
+      uses: shogo82148/actions-setup-mysql@v1.53.1
+      with:
+        mysql-version: "8.0"
+
+    - name: Configure MYSQL and import DB
+      run: |
+        mysqladmin --user=${{ env.DB_USER }} --password=${{ env.DB_OLD_PASSWORD }} password ${{ env.DB_PASSWORD }}
+        type $env:GITHUB_WORKSPACE\database\initDatabase.sql | mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+
+    - name: Set up MYSQL Connector
+      working-directory: cpp/mysqlcppconn
+      run: |
+        Invoke-WebRequest -Uri https://www.code-cop.org/mysqlcppconn/mysql-connector-c++-8.0.33-winx64-debug.zip -OutFile mysql-connector.zip
+        Expand-Archive -Path mysql-connector.zip -DestinationPath .
+        echo "$env.GITHUB_WORKSPACE\cpp\mysqlcppconn\mysql-connector-c++-8.0.33-winx64\lib64" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        echo "$env.GITHUB_WORKSPACE\cpp\mysqlcppconn\mysql-connector-c++-8.0.33-winx64\lib64\debug" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        copy ..\mysqlcppconn\mysql-connector-c++-8.0.33-winx64\lib64\*.dll .
+        copy ..\mysqlcppconn\mysql-connector-c++-8.0.33-winx64\lib64\debug\*.dll .
+        cmake -G "Visual Studio 17 2022" ..
+        cmake --build . --config Debug

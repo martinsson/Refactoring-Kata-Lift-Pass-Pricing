@@ -51,7 +51,7 @@ jobs:
     - name: Smoke test
       run: |
         php -S localhost:8000 -t bootstrap &
-        sleep 2
+        sleep 3
         wget -qO ./response.json "http://localhost:8000/prices?type=night&age=23&date=2019-02-18"
         pkill -f "localhost:8000"
         sleep 1
