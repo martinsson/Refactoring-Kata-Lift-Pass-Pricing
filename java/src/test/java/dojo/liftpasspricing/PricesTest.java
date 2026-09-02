@@ -42,7 +42,7 @@ public class PricesTest {
                     contentType("application/json").
             extract().jsonPath();
 
-        assertEquals("putSomehtingHere", response.get("putSomehtingHere"));
+        assertEquals("putSomethingHere", response.get("putSomethingHere"));
     }
 
 }
